@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "string": "cpp",
+        "chrono": "cpp",
+        "limits": "cpp",
+        "array": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "thread": "cpp"
+    }
+}

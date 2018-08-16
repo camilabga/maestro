@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "fstream": "cpp",
+        "string": "cpp",
+        "*.tcc": "cpp",
+        "system_error": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp",
+        "cstdlib": "cpp",
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp",
+        "functional": "cpp"
+    }
+}

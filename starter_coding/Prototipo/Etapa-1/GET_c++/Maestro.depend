@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1504275928 source:/home/luiz/Documentos/Projetos/Maestro/Maestro/main.cpp
+	<iostream>
+	<curl/curl.h>
+	<cstring>
+	<unistd.h>
+	<cstdlib>
+
+1504221363 source:/home/luiz/Documentos/Projetos/Maestro/Maestro/test1.cpp
+
+1504292069 source:/home/luiz/Documentos/Projetos/Maestro/maestro/Protótipo/Etapa-1/GET_c++/main.cpp
+	<iostream>
+	<curl/curl.h>
+

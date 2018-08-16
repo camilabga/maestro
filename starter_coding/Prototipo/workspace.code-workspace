@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "Etapa-3(UDP)/codigoESP"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.env.linux": {
+			"PATH": "/home/luiz/.platformio/penv/bin:/home/luiz/.platformio/penv:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+			"PLATFORMIO_CALLER": "vscode"
+		},
+		"files.associations": {
+			"cmath": "cpp",
+			"cstdlib": "cpp"
+		}
+	}
+}

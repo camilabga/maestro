@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "gdb",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "name": "PlatformIO Debugger",
+            "target": "/home/luiz/Documentos/Projetos/Maestro/maestro/Prototipo/Etapa-2[pwm]/espCode_pwm/.pioenvs/esp12e/firmware.elf",
+            "gdbpath": "/home/luiz/.platformio/penv/bin/piodebuggdb",
+            "autorun": [ "source .pioinit" ]
+        }
+    ]
+}
