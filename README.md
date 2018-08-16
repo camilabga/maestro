@@ -29,10 +29,8 @@ It has 4 modes:
 
 ### Running the data through the GWR
 
-### Running the correction algorithm
+### Running the correction algorithm without the Wearable
 
-#### Without the Wearable
-
-#### With the Wearable
+### Running the correction algorithm with the Wearable
 
 ## Article(s) Published
