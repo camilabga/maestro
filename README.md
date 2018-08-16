@@ -1,4 +1,4 @@
-# __Repository made to support the project Maestro__
+# Repository made to support the project Maestro
 
 ## Introduction
 The project consists in a system designed to teach and correct the movement of a blind student that aims to learn a movement. With a OpenCV algorithm and a wearable, we made it possible to these students have a better perception to wheather they are making the gesture correctly or not.
@@ -16,6 +16,15 @@ The project evolved to a different direction. To filter the gesture, we use a ma
 
 This project was initially executed on a Linux environment with the distribution Ubuntu 16.04. The OpenCV version was 3.4.1 and the ArUco version was 3.0.10. The machine had an Intel Core i5 7th generation and 8GB of RAM Memory.
 
+## Configuring the Wearable
+
+1. Regular motors activation
+2. Alternated motors activation
+
+### Regular motors activation
+
+### Alternated motors activation
+
 ## Running the code
 The main code is in the ../structure directory. To execute it you must, first choose the mode of execution by editing the **main.cpp** file and the project that contains the NN algorithm (GWR).
 
@@ -26,7 +35,7 @@ It has 4 modes:
 4. Running the correction algorithm with the Wearable
 
 ### Recording a new Gesture
-to do
+Open the file 
 
 ### Running the data through the GWR
 to do
