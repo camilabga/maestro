@@ -26,11 +26,15 @@ It has 4 modes:
 4. Running the correction algorithm with the Wearable
 
 ### Recording a new Gesture
+to do
 
 ### Running the data through the GWR
+to do
 
 ### Running the correction algorithm without the Wearable
+to do
 
 ### Running the correction algorithm with the Wearable
+to do
 
 ## Article(s) Published
