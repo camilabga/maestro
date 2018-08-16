@@ -1,1 +1,38 @@
-# maestro
+# Repository made to support the project Maestro
+
+## Introduction
+The project consists in a system designed to teach and correct the movement of a blind student that aims to learn a movement. With a OpenCV algorithm and a wearable, we made it possible to these students have a better perception to wheather they are making the gesture correctly or not.
+
+The correction of the movement is passed to the user with an haptic feedback in real time while he/she is executing the gesture.
+
+This work proposes a human gesture evaluation with visual detection and haptic feedback as an additional tool. The purpose is to utilize gesture monitoring with a visual detection alongside markers to execute a gesture following and then, send a haptic feedback to the user.
+
+The project evolved to a different direction. To filter the gesture, we use a machine learning algorithm. At first, a SOM neural network was tested, but then the problem fitted better with a network called [GWR](https://www.sciencedirect.com/science/article/pii/S0893608002000783).
+
+## Installing the requisites
+* OpenCV 3.4.x [Installation Guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
+* ArUco 3.0.10 [Installation Guide](http://maztories.blogspot.com/2013/07/installing-aruco-augmented-reality.html)
+* Curl Library [Installation Guide]()
+
+This project was initially executed on a Linux environment with the distribution Ubuntu 16.04. The OpenCV version was 3.4.1 and the ArUco version was 3.0.10. The machine had an Intel Core i5 7th generation and 8GB of RAM Memory.
+
+## Running the code
+The main code is in the ../LALALA directory. To execute it you must, first choose the mode of execution by editing the **main.cpp** file and the project that contains the NN algorithm (GWR).
+
+It has 4 modes:
+1. 
+2. 
+3. 
+4. 
+
+### Recording a new Gesture
+
+### Running the data through the GWR
+
+### Running the correction algorithm
+
+#### Without the Wearable
+
+#### With the Wearable
+
+## Article(s) Published
