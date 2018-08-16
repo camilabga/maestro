@@ -16,7 +16,7 @@ int main (int argc, char **argv) {
     Vision vision(argc, argv);
     Weareable weareable;
     //Trajectory trajectory("../Data_GWR/maestro3D-1.csv");
-    Trajectory trajectory("../Data/square.csv");
+    Trajectory trajectory("../data/square.csv");
     
     weareable.setIP((char*)"10.6.3.111");
     weareable.start();
