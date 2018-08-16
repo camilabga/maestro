@@ -23,8 +23,8 @@ int main (int argc, char **argv) {
     trajectory.unnormalize(Point(FRAME_WIDTH/2, FRAME_HEIGHT/2));
     //trajectory.unnormalize(Point(300, 100));
 
-    trajectory.saveMovement("../Samples_Data/sample02_square_01.csv");
-    vision.record("../Samples/sample02_square_01.avi");
+    trajectory.saveMovement("../data/sample02_square_01.csv");
+    vision.record("../data/sample02_square_01.avi");
 
     while(1){
         vision.calculateTagCenter();
