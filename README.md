@@ -17,13 +17,13 @@ The project evolved to a different direction. To filter the gesture, we use a ma
 This project was initially executed on a Linux environment with the distribution Ubuntu 16.04. The OpenCV version was 3.4.1 and the ArUco version was 3.0.10. The machine had an Intel Core i5 7th generation and 8GB of RAM Memory.
 
 ## Running the code
-The main code is in the ../LALALA directory. To execute it you must, first choose the mode of execution by editing the **main.cpp** file and the project that contains the NN algorithm (GWR).
+The main code is in the ../structure directory. To execute it you must, first choose the mode of execution by editing the **main.cpp** file and the project that contains the NN algorithm (GWR).
 
 It has 4 modes:
-1. 
-2. 
-3. 
-4. 
+1. Recording a new Gesture
+2. Running the data through the GWR
+3. Running the correction algorithm without the Wearable
+4. Running the correction algorithm with the Wearable
 
 ### Recording a new Gesture
 
