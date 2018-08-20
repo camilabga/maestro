@@ -18,7 +18,7 @@ int main (int argc, char **argv) {
     //Trajectory trajectory("../Data_GWR/maestro3D-1.csv");
     Trajectory trajectory("../data/square.csv");
     
-    weareable.setIP((char*)"10.6.3.111");
+    weareable.setIP((char*)"10.6.4.107");
     weareable.start();
     trajectory.unnormalize(Point(FRAME_WIDTH/2, FRAME_HEIGHT/2));
     //trajectory.unnormalize(Point(300, 100));

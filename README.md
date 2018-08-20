@@ -22,8 +22,10 @@ This project was initially executed on a Linux environment with the distribution
 2. Alternated motors activation
 
 ### Regular motors activation
+to do
 
 ### Alternated motors activation
+to do 
 
 ## Running the code
 The main code is in the ../structure directory. To execute it you must, first choose the mode of execution by editing the **main.cpp** file and the project that contains the NN algorithm (GWR).
