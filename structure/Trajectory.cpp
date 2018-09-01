@@ -23,8 +23,8 @@ Trajectory::~Trajectory(){
 
 void Trajectory::getPointsFromCSV(string file){
     ifstream myfile(file);
-	char temp0[10], temp1[10], temp2[10];
-
+	//char temp0[10], temp1[10], temp2[10];
+	char temp1[10], temp2[10];
 	x.clear();
 	y.clear();
 	if (myfile.is_open()){

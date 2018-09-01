@@ -60,7 +60,7 @@ class Vision{
         inline void saveVideo(){video.write(TheInputImage);}
         inline bool isTargetOn(){return target_on;}
 
-        void drawTrajectory(Trajectory &T, unsigned int next);
+        void drawTrajectory(Trajectory &T, int next);
         void drawError(Point pos, Point error);
         inline void show(){flip(TheInputImageCopy, TheInputImageCopy, 1);imshow("in", TheInputImageCopy);}
 

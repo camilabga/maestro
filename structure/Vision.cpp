@@ -178,10 +178,9 @@ void Vision::calculateTagCenter(){
             if ( TheVideoCapturer.grab()==false) key=27;
 }
 
-void Vision::drawTrajectory(Trajectory &T, unsigned int next){
-    for (vector<float>::size_type i = 0; i < T.getSize(); i++){
+void Vision::drawTrajectory(Trajectory &T, int next){
+    for (int i = 0; i < T.getSize(); i++){
 		ellipse(TheInputImageCopy, T.getPoint(i), Size(CHANGE_POINT_STATUS_X, CHANGE_POINT_STATUS_Y ), 0, 0, 360, Scalar( 0, 255, 0 ), 1, 8 );
-
 		if (next == i) {
 			circle(TheInputImageCopy, T.getPoint(i), 2, Scalar(0, 0, 255), 8, 8, 0);
 		} else if (index > i) {
