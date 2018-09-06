@@ -65,9 +65,59 @@ Vision vision(argc, argv);
 to do
 
 ### Running the correction algorithm without the Wearable
-to do
+Open the file **main.cpp** and edit it to look like this:
+
+```c++
+    Vision vision(argc, argv);
+    Trajectory trajectory("../data/square.csv");
+    trajectory.unnormalize(Point(FRAME_WIDTH/2, FRAME_HEIGHT/2));
+    trajectory.saveMovement("../data/random_test.csv");
+
+    while(1){
+        vision.calculateTagCenter();
+        vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
+        if (vision.isTargetOn()) {
+            trajectory.setNextPoint0(vision.getCenter());
+            vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
+            trajectory.savePoint(vision.getCenter());
+        }
+
+        vision.show();
+    }
+
+    trajectory.endSaving();
+```
 
 ### Running the correction algorithm with the Wearable
-to do
+Open the file **main.cpp** and edit it to look like this:
+
+```c++
+    Vision vision(argc, argv);
+    Weareable weareable;
+    Trajectory trajectory("../data/square.csv");
+
+    trajectory.unnormalize(Point(FRAME_WIDTH/2, FRAME_HEIGHT/2));
+    trajectory.saveMovement("../data/random_test.csv");
+
+    weareable.setIP((char*)"10.6.4.107");
+    weareable.start();
+
+    while(1){
+        vision.calculateTagCenter();
+        vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
+        if (vision.isTargetOn()) {
+            trajectory.setNextPoint0(vision.getCenter());
+            vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
+
+            weareable.send(trajectory.getError(vision.getCenter()));
+
+            trajectory.savePoint(vision.getCenter());
+        }
+
+        vision.show();
+    }
+
+    trajectory.endSaving();
+```
 
 ## Article(s) Published
