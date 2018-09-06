@@ -37,30 +37,25 @@ It has 4 modes:
 
 ### Recording a new Gesture
 Open the file **main.cpp** and edit it to look like this:
+
 ```c++
 Vision vision(argc, argv);
-    //Trajectory trajectory("../Data_GWR/maestro3D-1.csv");
     Trajectory trajectory("../data/square.csv");
     
     trajectory.unnormalize(Point(FRAME_WIDTH/2, FRAME_HEIGHT/2));
-    //trajectory.unnormalize(Point(300, 100));
 
-    trajectory.saveMovement("../data/random_test.csv");
+    trajectory.saveMovement("../data/new_movement.csv");
     vision.record("../../Videos/random_test.avi");
 
     while(1){
         vision.calculateTagCenter();
-        vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
         if (vision.isTargetOn()) {
-            trajectory.setNextPoint0(vision.getCenter());
-            vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
-            
             trajectory.savePoint(vision.getCenter());
             vision.saveVideo();
         }
 
         vision.show();
-        //vision.saveVideo();
+        vision.saveVideo();
     }
 
     trajectory.endSaving();
