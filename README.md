@@ -12,7 +12,6 @@ The project evolved to a different direction. To filter the gesture, we use a ma
 ## Installing the requisites
 * OpenCV 3.4.x [Installation Guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html)
 * ArUco 3.0.10 [Installation Guide](http://maztories.blogspot.com/2013/07/installing-aruco-augmented-reality.html)
-* Curl Library [Installation Guide]()
 
 This project was initially executed on a Linux environment with the distribution Ubuntu 16.04. The OpenCV version was 3.4.1 and the ArUco version was 3.0.10. The machine had an Intel Core i5 7th generation and 8GB of RAM Memory.
 
@@ -37,7 +36,35 @@ It has 4 modes:
 4. Running the correction algorithm with the Wearable
 
 ### Recording a new Gesture
-Open the file 
+Open the file **main.cpp** and edit it to look like this:
+```c++
+Vision vision(argc, argv);
+    //Trajectory trajectory("../Data_GWR/maestro3D-1.csv");
+    Trajectory trajectory("../data/square.csv");
+    
+    trajectory.unnormalize(Point(FRAME_WIDTH/2, FRAME_HEIGHT/2));
+    //trajectory.unnormalize(Point(300, 100));
+
+    trajectory.saveMovement("../data/random_test.csv");
+    vision.record("../../Videos/random_test.avi");
+
+    while(1){
+        vision.calculateTagCenter();
+        vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
+        if (vision.isTargetOn()) {
+            trajectory.setNextPoint0(vision.getCenter());
+            vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
+            
+            trajectory.savePoint(vision.getCenter());
+            vision.saveVideo();
+        }
+
+        vision.show();
+        //vision.saveVideo();
+    }
+
+    trajectory.endSaving();
+```
 
 ### Running the data through the GWR
 to do
