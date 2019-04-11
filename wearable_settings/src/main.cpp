@@ -2,8 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>  //Biblioteca do UDP.
 
-const char *ssid = "Hermes Post Office";
-const char *password = "Atenas147Wisdom";
+const char *ssid = "luladrao";
+const char *password = "ronaldopele";
 //const char *ssid = "LAR-ECT";
 //const char *password = "larfacil1234";
 
@@ -187,7 +187,7 @@ void loop() {
     //analogWrite(val1 > 0 ? ESQ : DIR, 50 + abs(val1));
 
     if(val1 > 0){
-        analogWrite(ESQ, abs(val1)-a < 0 ? 0 : abs(val1)-150);
+        analogWrite(ESQ, abs(val1)-150 < 0 ? 0 : abs(val1)-150);
         analogWrite(DIR,0);
         Serial.print("Escrevendo:");
         Serial.print(abs(val1)-150 < 0 ? 0 : abs(val1)-150);

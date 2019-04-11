@@ -127,7 +127,6 @@ Vision::Vision(int argc, char **argv){
     cv::resizeWindow("in",640,480);
 
     setParamsFromGlobalVariables();
-
     {
         float w=std::min(int(1920),int(TheInputImage.cols));
         float f=w/float(TheInputImage.cols);

@@ -34,7 +34,10 @@ void Trajectory::getPointsFromCSV(string file){
 			myfile.getline (temp2, 10);
 			x.push_back(atof(temp1));
 			y.push_back(atof(temp2));
+			std::cout<<temp1 <<"! " << temp2 <<"\n";
 		}
+
+		//std::cerr<<"size: "<< x.size();
 
 		myfile.close();
 	}
@@ -45,8 +48,10 @@ void Trajectory::unnormalize(){
 }
 
 void Trajectory::unnormalize(Point norma){
-    for (vector<float>::size_type i = 0; i < x.size(); i++)
-		points.push_back(Point((int)(norma.x + norma.x* x[i]), (int)(FRAME_HEIGHT-(y[i] * (FRAME_HEIGHT-norma.y)))));	
+    for (vector<float>::size_type i = 0; i < x.size(); i++){
+		points.push_back(Point((int)(norma.x + norma.x* x[i]), (int)(FRAME_HEIGHT-(y[i] * (FRAME_HEIGHT-norma.y)))));
+		std:cout<<"Points: "<< points[i]<<'\n';	
+	}
 
     current_point = 0;
 }

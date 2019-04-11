@@ -13,9 +13,14 @@ using namespace aruco;
 */ 
 
 int main (int argc, char **argv) {
-    
+    char *argTest[4];
+    argTest[1] = "live"; 
+    argTest[2] = "camera.yml";
+    argTest[3] = "0.025";
+    std::cout<<argc<<"--"<<argv[0]<<"--"<<argv[1]<<"--"<<argv[2]<<"--"<<argv[3];
+
     Vision vision(argc, argv);
-    Trajectory trajectory("../data/wave_luiz.csv");
+    Trajectory trajectory("../data/square.csv");
     
     trajectory.unnormalize(Point(FRAME_WIDTH/2, FRAME_HEIGHT/2));
 
