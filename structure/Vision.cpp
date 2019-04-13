@@ -102,7 +102,7 @@ Vision::Vision(int argc, char **argv){
         }
 
         cout << "Opening camera index " << vIdx << endl;
-        TheVideoCapturer.open(vIdx);
+        TheVideoCapturer.open("/home/luiz/Documents/projects/Videos/quat_1.MOV");
         waitTime = 10;
         isVideo=true;
     } else{
