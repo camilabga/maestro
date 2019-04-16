@@ -9,11 +9,14 @@ using namespace aruco;
 /* 
 00 sem pulseira
 01 amostragem
-02 GWR
+02 GWR  
 */ 
-
-int main (int argc, char **argv) {
-    
+ 
+int main (int argc, char **argv) { 
+    char *argTest[4]; 
+    argTest[1] = "live";  
+    argTest[2] = "camera.yml"; 
+    argTest[3] = "0.025"; 
     Vision vision(argc, argv);
     Trajectory trajectory("../data/square.csv");
     

@@ -141,7 +141,7 @@ Vision::~Vision(){
 void Vision::calculateTagCenter(){
         TheVideoCapturer.retrieve(TheInputImage);
         TheInputImage=resizeImage(TheInputImage,resizeFactor);
-        
+                
         Fps.start();
         TheMarkers = MDetector.detect(TheInputImage, TheCameraParameters, TheMarkerSize);
         Fps.stop();

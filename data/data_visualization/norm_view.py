@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from sklearn import preprocessing
 import numpy as np
 
-file_name = 'reta'
+file_name = 'quat'
 my_data = np.genfromtxt(file_name + '.csv', delimiter=',')
 my_data =  my_data[:,1:]
 
@@ -25,6 +25,7 @@ for data in my_data:
 
     ax1.plot(my_data[:,0],my_data[:,1],'ro')
     ax1.arrow(data[0],data[1],data[2],data[3], fc='k', ec='k')
+plt.axis([0, 1920, 0, 1080])
 
 
 minimum = np.absolute(my_data).min(axis=0)
@@ -48,6 +49,9 @@ for data in my_data:
 
     ax2.plot(data[0],data[1],'bo')
     ax2.arrow(data[0],data[1],data[2],data[3], fc='k', ec='k')
+
+plt.axis([0, 1920, 0, 1080])
+
 plt.show()
 
 np.savetxt(file_name + '_vel.csv', my_data, delimiter=",",fmt='%3.5f',header=header)
