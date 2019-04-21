@@ -94,7 +94,7 @@ Vision::Vision(int argc, char **argv){
     if (TheInputVideo.find("live") != string::npos){
         /* 0 -> WEBCAM
            1 -> CAMERA EXTERNA */
-        int vIdx = 0;
+        int vIdx = 2;
         char cad[100];
         if (TheInputVideo.find(":") != string::npos){
             std::replace(TheInputVideo.begin(), TheInputVideo.end(), ':', ' ');
@@ -102,7 +102,8 @@ Vision::Vision(int argc, char **argv){
         }
 
         cout << "Opening camera index " << vIdx << endl;
-        TheVideoCapturer.open("/home/luiz/Documents/projects/Videos/quat_1.MOV");
+        //TheVideoCapturer.open(vIdx);
+        TheVideoCapturer.open("/home/luiz/Documents/projects/Videos/luizslow.mp4");
         waitTime = 10;
         isVideo=true;
     } else{

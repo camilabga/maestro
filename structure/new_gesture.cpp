@@ -17,8 +17,8 @@ int main (int argc, char **argv) {
     argTest[1] = "live"; 
     argTest[2] = "camera.yml";
     argTest[3] = "0.025";
-    std::cout<<argc<<"--"<<argv[0]<<"--"<<argv[1]<<"--"<<argv[2]<<"--"<<argv[3];
- 
+    std::cout<<argc<<"--"<<argv[0]<<"--"<< argv[1]<<"--"<<argv[2]<<"--"<<argv[3];
+    
     Vision vision(argc, argv);
     Trajectory trajectory("../data/square.csv");
     

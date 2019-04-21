@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from sklearn import preprocessing
 import numpy as np
 
-file_name = 'quat'
+file_name = 'firsttest'
 my_data = np.genfromtxt(file_name + '.csv', delimiter=',')
 my_data =  my_data[:,1:]
 
