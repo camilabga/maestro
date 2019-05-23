@@ -102,8 +102,8 @@ Vision::Vision(int argc, char **argv){
         }
 
         cout << "Opening camera index " << vIdx << endl;
-        //TheVideoCapturer.open(vIdx);
-        TheVideoCapturer.open("/home/luiz/Documents/projects/Videos/luizslow.mp4");
+        TheVideoCapturer.open(vIdx);
+        //TheVideoCapturer.open("/home/luiz/Documents/projects/Videos/luizslow.mp4");
         waitTime = 10;
         isVideo=true;
     } else{
@@ -179,6 +179,7 @@ void Vision::calculateTagCenter(){
 }
 
 void Vision::drawTrajectory(Trajectory &T, int next){
+    
     for (int i = 0; i < T.getSize(); i++){
 		ellipse(TheInputImageCopy, T.getPoint(i), Size(CHANGE_POINT_STATUS_X, CHANGE_POINT_STATUS_Y ), 0, 0, 360, Scalar( 0, 255, 0 ), 1, 8 );
 		if (next == i) {
