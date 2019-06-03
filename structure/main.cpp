@@ -26,6 +26,7 @@ int main (int argc, char **argv) {
 
     while(1){
         vision.calculateTagCenter();
+        // Fazer análogo calcular centro de circunfefrencia
         vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
         if (vision.isTargetOn()) {
             trajectory.setNextPoint0(vision.getCenter());

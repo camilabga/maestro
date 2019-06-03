@@ -94,7 +94,7 @@ Vision::Vision(int argc, char **argv){
     if (TheInputVideo.find("live") != string::npos){
         /* 0 -> WEBCAM
            1 -> CAMERA EXTERNA */
-        int vIdx = 2;
+        int vIdx = 0;
         char cad[100];
         if (TheInputVideo.find(":") != string::npos){
             std::replace(TheInputVideo.begin(), TheInputVideo.end(), ':', ' ');
@@ -176,6 +176,10 @@ void Vision::calculateTagCenter(){
 
         if (isVideo)
             if ( TheVideoCapturer.grab()==false) key=27;
+}
+
+void Vision::circleTracker(){   
+
 }
 
 void Vision::drawTrajectory(Trajectory &T, int next){

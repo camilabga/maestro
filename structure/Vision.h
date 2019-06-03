@@ -57,6 +57,7 @@ class Vision{
         //bool start();
         inline const Point &getCenter() const {return center;}
         void calculateTagCenter();
+        void circleTracker();
         inline void saveVideo(){video.write(TheInputImage);}
         inline bool isTargetOn(){return target_on;}
 
