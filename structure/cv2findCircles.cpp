@@ -13,17 +13,25 @@ int main(int argc, char **argv){
     if (!video.isOpened()) return -1;
 
     while (true){
-        vector<Vec3b> circles;
+        vector<Vec3f> circles;
         
         video >> frame;
-        GaussianBlur(frame, frameBlur, Size(7,7), 0, 0);
+        GaussianBlur(frame, frameBlur, Size(7,7), 0, 0);  
         cvtColor(frameBlur, imageHSV, COLOR_BGR2HSV);
 
         //Retorna uma imagem binary do resultado do filtro
-        inRange(imageHSV, Scalar(55, 144, 17), Scalar(140, 255, 255), mask);
+        //inRange(imageHSV, Scalar(55, 144, 17), Scalar(140, 255, 255), mask);
+        inRange(imageHSV, Scalar(0, 0, 230), Scalar(255, 255, 255), mask);
 
-        HoughCircles( mask, circles, CV_HOUGH_GRADIENT, 1, mask.rows/8, 200, 100, 0, 0 );
-        //HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 0, 0);
+        Mat element = getStructuringElement( MORPH_ELLIPSE, Size(10, 10), Point(-1,-1));
+        erode(mask, mask, element);
+        dilate(mask, mask, element);
+
+        //HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 100, 20, 0, 0 );
+        HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 0, 0);
+
+        if (!circles.empty())
+            cout << circles[0][2] << endl;
 
         for( size_t i = 0; i < circles.size(); i++ ){
             Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
@@ -36,6 +44,7 @@ int main(int argc, char **argv){
 
 
         imshow("Img", frame);
+        imshow("mask", mask);
         char key = (char)waitKey(30);
         if (key == 27) break;
     }
