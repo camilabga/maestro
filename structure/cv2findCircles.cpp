@@ -21,14 +21,14 @@ int main(int argc, char **argv){
 
         //Retorna uma imagem binary do resultado do filtro
         //inRange(imageHSV, Scalar(55, 144, 17), Scalar(140, 255, 255), mask);
-        inRange(imageHSV, Scalar(0, 0, 230), Scalar(255, 255, 255), mask);
+        inRange(imageHSV, Scalar(0, 0, 230), Scalar(255, 15, 255), mask);
 
         Mat element = getStructuringElement( MORPH_ELLIPSE, Size(10, 10), Point(-1,-1));
-        erode(mask, mask, element);
-        dilate(mask, mask, element);
+        //erode(mask, mask, element);
+        //dilate(mask, mask, element);
 
         //HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 100, 20, 0, 0 );
-        HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 0, 0);
+        HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 5, 30);
 
         if (!circles.empty())
             cout << circles[0][2] << endl;
@@ -42,7 +42,7 @@ int main(int argc, char **argv){
             circle(frame, center, radius, Scalar(0,0,255), 3, 8, 0 );
         }
 
-
+        flip(frame, frame, 1);
         imshow("Img", frame);
         imshow("mask", mask);
         char key = (char)waitKey(30);
