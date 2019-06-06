@@ -3,7 +3,7 @@ from sklearn import preprocessing
 import numpy as np
 
 
-file_name = 'binarioErick'
+file_name = 'quaternario'
 my_data = np.genfromtxt(file_name + '.csv', delimiter=',')
 #my_data =  my_data[:,1:]
 print(my_data[0])
@@ -13,13 +13,13 @@ print(len(my_data))
 
 
 #plt.axis([0, 640, 0, 480])
-'''
+
 cutted_data = np.empty([1, 2])
 print(cutted_data)
 start = False
 for data in my_data:
 
-    plt.plot(int(data[0]),int(data[1]),'r.')
+    plt.plot(int(data[0]),480-int(data[1]),'r.')
     #plt.text(int(data[0]),(data[1]),str(data[0])+' , '+str(data[1]))
     #plt.arrow(data[0],data[1],data[2],data[3], fc='k', ec='k')
     plt.show(block=False)
@@ -34,7 +34,7 @@ for data in my_data:
 my_data = cutted_data[1:,:]
 print('*'*80)
 print(my_data[0])
-'''
+
 
 vel = np.empty([len(my_data), 2])
 
@@ -56,10 +56,10 @@ print('luiz',np.argwhere(my_data == 0))
 print(my_data)
 for data in my_data:
 
-    plt.plot(int(data[0]),int(data[1]),'r.')
+    plt.plot(int(data[0]),480-int(data[1]),'r.')
     #plt.text(int(data[0]),(data[1]),str(data[0])+' , '+str(data[1]))
     
-    plt.arrow(data[0],data[1],data[2],data[3], fc='k', ec='k')
+    plt.arrow(data[0],480-data[1],data[2],-data[3], fc='k', ec='k')
 plt.axis([0, 640, 0, 480])
 
 plt.show()
@@ -67,9 +67,12 @@ plt.show()
 
 
 
-minimum = np.absolute(my_data).min(axis=0)
-maximum = np.absolute(my_data).max(axis=0)
-delta = maximum - minimum
+#minimum = np.absolute(my_data).min(axis=0)
+minimum = np.array([ 74.,128.,  0.,  0.])
+#maximum = np.absolute(my_data).max(axis=0)
+
+#delta = maximum - minimum
+delta = np.array([328.,272.,108.,184.])
 header = 'X, Y, VelX, VelY |' + np.array2string(minimum, separator=';') + np.array2string(delta, separator=';')
 
 
@@ -93,6 +96,6 @@ plt.axis([0, 1920, 0, 1080])
 '''
 plt.show()
 
-np.savetxt(file_name + '_vel.csv', my_data, delimiter=",",fmt='%3.5f',header=header)
+np.savetxt(file_name + '_unique_vel.csv', my_data, delimiter=",",fmt='%3.5f',header=header)
 
 
