@@ -26,8 +26,8 @@ int main (int argc, char **argv) {
 
     while(1){
         vision.calculateTagCenter();
-        //vision.circleTracker();
-        
+        vision.circleTracker();
+        //oi
         vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
         if (vision.isTargetOn()) {
             trajectory.setNextPoint0(vision.getCenter());
