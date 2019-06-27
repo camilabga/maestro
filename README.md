@@ -124,4 +124,4 @@ Open the file **main.cpp** and edit it to look like this:
 ### Human Gesture Evaluation with Visual Detection and Haptic Feedback
 **Abstract:** Learning a gesture pertains to learning a expression of motion by a human, involving the hands, arms, face, head, and/or body. In this work, we propose to employ haptic feedback as an additional tool in the gesture following/evaluation loop. Accordingly, the user wears a haptic wearable device in the form of a bracelet which vibrates according to the trajectory error. Our research hypothesis is then to investigate whether such haptic device aids the user in correcting his movement in relation to the prerecorded trajectory.
 
-**Acess in: ** https://dl.acm.org/citation.cfm?id=3243104
+**Acess in:** https://dl.acm.org/citation.cfm?id=3243104
