@@ -25,9 +25,9 @@ int main (int argc, char **argv) {
     weareable.start();
 
     while(1){
-        vision.calculateTagCenter();
+        //vision.calculateTagCenter();
         vision.circleTracker();
-        //oi
+        
         vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
         if (vision.isTargetOn()) {
             trajectory.setNextPoint0(vision.getCenter());

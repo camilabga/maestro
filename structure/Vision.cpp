@@ -187,13 +187,13 @@ void Vision::circleTracker(){
     Mat frameBlur, imageHSV, mask;
     GaussianBlur(TheInputImageCopy, frameBlur, Size(7,7), 0, 0);  
     cvtColor(frameBlur, imageHSV, COLOR_BGR2HSV);
-    inRange(imageHSV, Scalar(150, 0, 200), Scalar(255, 160, 255), mask);
+    inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
 
-    Mat element = getStructuringElement( MORPH_ELLIPSE, Size(10, 10), Point(-1,-1));
+    Mat element = getStructuringElement(MORPH_ELLIPSE, Size(10, 10), Point(-1,-1));
     erode(mask, mask, element);
     dilate(mask, mask, element);
 
-    HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 5, 30);
+    HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 5, 100);
 
     if(!circles.empty()){
         target_on = true;

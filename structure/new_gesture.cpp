@@ -28,7 +28,8 @@ int main (int argc, char **argv) {
     vision.record("../../Videos/random_test.avi");
 
     while(1){
-        vision.calculateTagCenter();
+        //vision.calculateTagCenter();
+        vision.circleTracker();
         if (vision.isTargetOn()) {
             trajectory.savePoint(vision.getCenter());
             vision.saveVideo();

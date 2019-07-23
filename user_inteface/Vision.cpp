@@ -67,7 +67,6 @@ void Vision::record(string filename){
 
 }
 
-
 Vision::Vision(){
     target_on = false;
     char* argv[4];
