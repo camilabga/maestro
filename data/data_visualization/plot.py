@@ -4,16 +4,16 @@ import numpy as np
 import time
 
 
-file_name = 'quaternario'
+file_name = 'binario'
 raw_data = np.genfromtxt(file_name + '.csv', delimiter=',')
 #raw_data =  raw_data[:,1:]
 
 
-raw_data_norm = np.genfromtxt(file_name + '_unique_vel.csv', delimiter=',')
+raw_data_norm = np.genfromtxt(file_name + '_vel.csv', delimiter=',')
 #raw_data_norm =  raw_data[:,0:1]
 
 #file_name = '../final_trajectories/binario2'
-file_name = 'quaternario'
+file_name = '../final_trajectories/binario'
 my_data = np.genfromtxt(file_name + '.txt', delimiter=' ')
 
 
