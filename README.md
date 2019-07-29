@@ -1,5 +1,5 @@
 # Repository made to support the project Maestro
-
+ 
 ## Introduction
 The project consists in a system designed to teach and correct the movement of a blind student that aims to learn a movement. With a OpenCV algorithm and a wearable, we made it possible to these students have a better perception to wheather they are making the gesture correctly or not.
 
