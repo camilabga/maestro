@@ -1,21 +1,41 @@
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 import numpy as np
+import sys
+
+file_name = sys.argv[1]
+my_data = np.genfromtxt(file_name, delimiter=',')
+pontos =  my_data
+vetorOrd = []
+
+def distanciaQ(x1,y1,x2,y2):
+    return ((x2-x1)**2)+((y2-y1)**2)
+
+def closestPoint(x, y, pontos):
+    menor = 10000000000
+    cont = 0
+    posicao = -1
+    for ponto in pontos:
+        dist = distanciaQ(x, y, ponto[0], ponto[1])
+        if dist < menor:
+            menor = dist
+            posicao = cont
+        cont = cont + 1
+    global vetorOrd
+    vetorOrd.append(pontos[posicao])
 
 
-file_name = 'new_movement'
-my_data = np.genfromtxt(file_name + '.csv', delimiter=',')
-#my_data =  my_data[:,1:]
-print(my_data[0])
-my_data =  my_data[:,1:3]
-#my_data[:,1] = 480 - my_data[:,1] 
-print(my_data)
+def onclick(event):
+    global pontos
+    closestPoint(event.xdata, event.ydata, pontos)
 
 
-#plt.axis([0, 640, 0, 480])
+fig, ax = plt.subplots()
+fig.canvas.mpl_connect('button_press_event', onclick)
 
-plt.plot(my_data[:,0],480-my_data[:,1],'r.')
-    #plt.text(int(data[0]),(data[1]),str(data[0])+' , '+str(data[1]))
-    #plt.arrow(data[0],data[1],data[2],data[3], fc='k', ec='k')
+plt.plot(pontos[:,0], pontos[:,1],'r.')
 plt.show()
+
+np.savetxt('aaaaaaaaaaaaaaaaaaa.csv', vetorOrd, delimiter= ',', fmt='%.5f')
+
     

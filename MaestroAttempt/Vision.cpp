@@ -67,7 +67,6 @@ void Vision::record(string filename){
 
 }
 
-
 Vision::Vision(){
     target_on = false;
     char* argv[4];
@@ -187,6 +186,44 @@ void Vision::calculateTagCenter(){
             if ( TheVideoCapturer.grab()==false) key=27;
 }
 
+void Vision::circleTracker(){
+    TheVideoCapturer.retrieve(TheInputImage);
+    TheInputImage=resizeImage(TheInputImage,resizeFactor);
+    TheInputImage.copyTo(TheInputImageCopy);
+
+    vector<Vec3f> circles;
+    Mat frameBlur, imageHSV, mask;
+    GaussianBlur(TheInputImageCopy, frameBlur, Size(7,7), 0, 0);
+    cvtColor(frameBlur, imageHSV, COLOR_BGR2HSV);
+    inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
+
+    Mat element = getStructuringElement(MORPH_ELLIPSE, Size(10, 10), Point(-1,-1));
+    erode(mask, mask, element);
+    dilate(mask, mask, element);
+
+    HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 5, 100);
+
+    if(!circles.empty()){
+        target_on = true;
+        Point centro(cvRound(circles[0][0]), cvRound(circles[0][1]));
+        int radius = cvRound(circles[0][2]);
+        // circle center
+        circle(TheInputImageCopy, centro, 3, Scalar(0,255,0), -1, 8, 0 );
+        center.x=centro.x;
+        center.y=centro.y;
+        // circle outline
+        circle(TheInputImageCopy, centro, radius, Scalar(0,0,255), 3, 8, 0 );
+    }
+
+
+    key = cv::waitKey(waitTime);  // wait for key to be pressed
+
+    index++;  // number of images captured
+
+    if (isVideo)
+        if ( TheVideoCapturer.grab()==false) key=27;
+}
+
 void Vision::drawTrajectory(Trajectory &T, int next){
     for (int i = 0; i < T.getSize(); i++){
         //std::cerr<<"Draw:"<<T.getPoint(i)<<'\n';
@@ -204,7 +241,9 @@ void Vision::drawTrajectory(Trajectory &T, int next){
     }
 }
 
-void Vision::drawError(Point pos, Point error){
+Point Vision::drawError(Point pos, Point error){
     arrowedLine(TheInputImageCopy, pos, error, Scalar(0, 0, 255), 5, 8, 0, 0.5);
+    Point value;
+    return value = pos - error;
 }
 
