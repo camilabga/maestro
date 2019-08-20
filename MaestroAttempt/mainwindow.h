@@ -4,6 +4,7 @@
 #include "Vision.h"
 #include "Weareable.h"
 #include "Trajectory.h"
+#include "generator.h"
 
 #include <QMainWindow>
 #include <QMediaPlayer>
@@ -20,28 +21,6 @@ namespace Ui {
 class MainWindow;
 }
 
-// Gerador de Som
-class Generator : public QIODevice
-{
-    Q_OBJECT
-
-public:
-    Generator(const QAudioFormat &format, qint64 durationUs, int sampleRate);
-
-    void start();
-    void stop();
-
-    qint64 readData(char *data, qint64 maxlen) override;
-    qint64 writeData(const char *data, qint64 len) override;
-    qint64 bytesAvailable() const override;
-
-public:
-    void generateData(const QAudioFormat &format, qint64 durationUs, int sampleRate);
-
-private:
-    qint64 m_pos = 0;
-    QByteArray m_buffer;
-};
 
 class MainWindow : public QMainWindow
 {
@@ -74,6 +53,8 @@ private slots:
 
     void MetronomoSlot();
 
+    void AproxSlot();
+
     void on_spinBox_valueChanged(int arg1);
 
     void on_startMetronomeButton_clicked();
@@ -82,10 +63,12 @@ private slots:
 
     void on_volumeSlider_valueChanged(int value);
 
+    Point audioFeedbackHandler(Point correctionValue, Point newValue);
+
 private:
     Ui::MainWindow *ui;
 
-    bool newGesture,correction;
+    bool newGesture, correction, longe, perto;
 
     int toneSampleRateHz;
     QAudioFormat format;
@@ -95,6 +78,9 @@ private:
 
     Point correctionValue;
     QSoundEffect correctionEffect;
+
+    QTimer *aproxTimer;
+    QSoundEffect aproxEffect;
 
     QSoundEffect metronomoTick;
     QTimer *metronomoTimer;

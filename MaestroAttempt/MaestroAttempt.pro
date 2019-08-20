@@ -31,6 +31,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    generator.cpp \
         main.cpp \
         mainwindow.cpp \
     Vision.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
     Weareable.cpp
 
 HEADERS += \
+    generator.h \
         mainwindow.h \
     Vision.h \
     Trajectory.h \
