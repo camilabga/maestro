@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->startBt->hide();
     newGesture = false;
     correction = false;
+    player = new QMediaPlayer(this);
+    //connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+
 
 }
 
@@ -148,4 +151,11 @@ void MainWindow::on_actionNovo_Gesto_PSMove_triggered()
     }
 
 
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    player->setMedia(QUrl::fromLocalFile("/home/luiz/Documents/projects/build-MaestroAttempt-Desktop_Qt_5_12_1_GCC_64bit-Debug/engine.mp3"));
+    player->setVolume(50);
+    player->play();
 }

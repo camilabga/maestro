@@ -4,8 +4,11 @@
 #include "Vision.h"
 #include "Weareable.h"
 #include "Trajectory.h"
+#include <QFile>
 
 #include <QMainWindow>
+#include <QMediaPlayer>
+
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +29,7 @@ public:
     Vision vision;
     Weareable weareable;
     Trajectory trajectory;
+    QMediaPlayer* player;
 
 private slots:
 
@@ -38,6 +42,8 @@ private slots:
     void on_actionTreinar_Gestos_triggered();
 
     void on_actionNovo_Gesto_PSMove_triggered();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
