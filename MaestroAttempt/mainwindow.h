@@ -53,8 +53,6 @@ private slots:
 
     void MetronomoSlot();
 
-    void AproxSlot();
-
     void on_spinBox_valueChanged(int arg1);
 
     void on_startMetronomeButton_clicked();
@@ -79,7 +77,6 @@ private:
     Point correctionValue;
     QSoundEffect correctionEffect;
 
-    QTimer *aproxTimer;
     QSoundEffect aproxEffect;
 
     QSoundEffect metronomoTick;

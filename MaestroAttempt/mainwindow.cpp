@@ -45,8 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     longe = perto = false;
     aproxEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/SimpleAudio/audios/metronome_click.wav"));
     aproxEffect.setVolume(0.25f);
-    aproxTimer = new QTimer(this);
-    connect(aproxTimer, SIGNAL(timeout()), this, SLOT(AproxSlot()));
 
     // Initialize Audio
     format.setSampleRate(44100);
@@ -99,9 +97,19 @@ void MainWindow::DisplayImage(){
         vision.saveVideo();
 
     }else if(correction){
+        unsigned int beforePonit, afterPoint;
+
         vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
+
+        beforePonit = trajectory.getCurrentPointId();
+
         if (vision.isTargetOn()) {
             trajectory.setNextPoint0(vision.getCenter());
+
+            // Feedback de Tap (Click quando o ponto é trocado)
+            afterPoint = trajectory.getCurrentPointId();
+            if(afterPoint != beforePonit && afterPoint == 0) aproxEffect.play();
+
             newValue = vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
             //weareable.send(trajectory.getError(vision.getCenter()));
             trajectory.savePoint(vision.getCenter());
@@ -120,11 +128,6 @@ void MainWindow::DisplayImage(){
 void MainWindow::MetronomoSlot()
 {
     metronomoTick.play();
-}
-
-void MainWindow::AproxSlot()
-{
-    aproxEffect.play();
 }
 
 void MainWindow::on_spinBox_valueChanged(int value)
@@ -233,8 +236,6 @@ Point MainWindow::audioFeedbackHandler(Point correctionValue, Point newValue)
     double aproxValue = (newValue.x)^2 + (newValue.y)^2;
     double compValue = (correctionValue.x)^2 + (correctionValue.y)^2;
 
-    qDebug() << aproxValue << " " << compValue;
-
     // Audible Feedback for correction
     if(correctionValue != newValue){
         if(newValue.y < 0){
@@ -256,22 +257,6 @@ Point MainWindow::audioFeedbackHandler(Point correctionValue, Point newValue)
             }
         }
         correctionValue = newValue;
-    }
-
-    // Audible feedback for approximation
-    if(aproxValue < compValue){
-        if(!perto){
-            aproxTimer->start(60000/40);
-            perto = true;
-            longe = false;
-        }
-    }
-    else{
-        if(!longe){
-            aproxTimer->start(60000/200);
-            longe = true;
-            perto = false;
-        }
     }
 
     return correctionValue;
