@@ -41,6 +41,10 @@ public:
 
 private slots:
 
+    Point audioFeedbackHandler(Point correctionValue, Point newValue);
+
+    int distanceToHz(int distance, int steps);
+
     void on_actionNovo_Gesto_triggered();
 
     void on_stopBt_clicked();
@@ -59,16 +63,21 @@ private slots:
 
     void on_stopMetronomeButton_clicked();
 
-    void on_volumeSlider_valueChanged(int value);
+    void on_volumeFeedbackSlider_valueChanged(int value);
 
-    Point audioFeedbackHandler(Point correctionValue, Point newValue);
+    void on_playFeedbackButton_clicked();
+
+    void on_stopFeedbackButton_clicked();
+
+    void on_metronomeVolumeSlider_valueChanged(int value);
 
 private:
     Ui::MainWindow *ui;
 
-    bool newGesture, correction, longe, perto;
+    bool newGesture, correction;
 
     int toneSampleRateHz;
+    const int durationSeconds = 1;
     QAudioFormat format;
 
     QScopedPointer<Generator> m_generator;
@@ -77,7 +86,7 @@ private:
     Point correctionValue;
     QSoundEffect correctionEffect;
 
-    QSoundEffect aproxEffect;
+    QSoundEffect proxEffect;
 
     QSoundEffect metronomoTick;
     QTimer *metronomoTimer;

@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1066</width>
-    <height>655</height>
+    <width>1092</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1066</width>
-    <height>600</height>
+    <width>1080</width>
+    <height>720</height>
    </size>
   </property>
   <property name="baseSize">
@@ -37,7 +37,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>644</width>
+      <width>651</width>
       <height>566</height>
      </rect>
     </property>
@@ -130,13 +130,23 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>350</y>
-      <width>161</width>
-      <height>92</height>
+      <x>750</x>
+      <y>300</y>
+      <width>251</width>
+      <height>181</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="metronomeLayout">
+     <item>
+      <widget class="QLabel" name="labelMetronome">
+       <property name="text">
+        <string>Metronome</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
      <item>
       <layout class="QHBoxLayout" name="bpmLayout">
        <item>
@@ -162,7 +172,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelMetronome">
+        <widget class="QLabel" name="labelMetronomeBPM">
          <property name="text">
           <string>BPM</string>
          </property>
@@ -172,6 +182,26 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QSlider" name="metronomeVolumeSlider">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelMetronomeVolume">
+       <property name="text">
+        <string>Volume</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="startMetronomeButton">
@@ -189,21 +219,64 @@
      </item>
     </layout>
    </widget>
-   <widget class="QSlider" name="volumeSlider">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>170</y>
-      <width>160</width>
-      <height>16</height>
+      <x>750</x>
+      <y>120</y>
+      <width>251</width>
+      <height>141</height>
      </rect>
     </property>
-    <property name="maximum">
-     <number>100</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
+    <layout class="QVBoxLayout" name="audioFeedbackLayout">
+     <item>
+      <widget class="QLabel" name="labelAudioFeedback">
+       <property name="text">
+        <string>Audio Feedback</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::RichText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="volumeFeedbackSlider">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelFeedbackVolume">
+       <property name="text">
+        <string>Volume</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="playFeedbackButton">
+       <property name="text">
+        <string>Play</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stopFeedbackButton">
+       <property name="text">
+        <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -211,7 +284,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1066</width>
+     <width>1092</width>
      <height>22</height>
     </rect>
    </property>

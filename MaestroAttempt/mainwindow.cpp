@@ -17,13 +17,14 @@ using namespace std;
 using namespace cv;
 //using namespace aruco;
 
-
-// Main Window
+/*******************
+    Main Window
+********************/
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     correctionEffect(this),
-    aproxEffect(this),
+    proxEffect(this),
     metronomoTick(this)
 {
 
@@ -32,6 +33,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(Timer, SIGNAL(timeout()), this, SLOT(DisplayImage()));
     ui->stopBt->hide();
     ui->startBt->hide();
+    // Hide Audio Feedback interface
+    ui->labelAudioFeedback->hide();
+    ui->playFeedbackButton->hide();
+    ui->stopFeedbackButton->hide();
+    ui->volumeFeedbackSlider->hide();
+    ui->labelFeedbackVolume->hide();
     newGesture = false;
 
     // Correção
@@ -42,9 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     correctionValue.y = 0;
 
     // Aproximação
-    longe = perto = false;
-    aproxEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/SimpleAudio/audios/metronome_click.wav"));
-    aproxEffect.setVolume(0.25f);
+    proxEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/SimpleAudio/audios/metronome_click.wav"));
+    proxEffect.setVolume(0.25f);
 
     // Initialize Audio
     format.setSampleRate(44100);
@@ -59,7 +65,6 @@ MainWindow::MainWindow(QWidget *parent) :
         format = QAudioDeviceInfo::defaultOutputDevice().nearestFormat(format);
     }
 
-    const int durationSeconds = 1;
     toneSampleRateHz = 0;
     m_generator.reset(new Generator(format, durationSeconds * 1000000, toneSampleRateHz));
     m_audioOutput.reset(new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice(), format));
@@ -80,6 +85,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/*********************************
+       Especific Functions
+**********************************/
 void MainWindow::DisplayImage(){
 
     Point newValue;
@@ -97,20 +105,22 @@ void MainWindow::DisplayImage(){
         vision.saveVideo();
 
     }else if(correction){
-        unsigned int beforePonit, afterPoint;
+        unsigned int currentPoint, beforePoint;
 
         vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
-
-        beforePonit = trajectory.getCurrentPointId();
+        beforePoint = trajectory.getCurrentPointId();
 
         if (vision.isTargetOn()) {
             trajectory.setNextPoint0(vision.getCenter());
 
             // Feedback de Tap (Click quando o ponto é trocado)
-            afterPoint = trajectory.getCurrentPointId();
-            if(afterPoint != beforePonit && afterPoint == 0) aproxEffect.play();
+            currentPoint = trajectory.getCurrentPointId();
+            int midPoint = (trajectory.getSize()) / 4;
+            if(int(currentPoint) == midPoint && currentPoint != beforePoint) proxEffect.play();
 
             newValue = vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
+
+
             //weareable.send(trajectory.getError(vision.getCenter()));
             trajectory.savePoint(vision.getCenter());
         }
@@ -125,11 +135,72 @@ void MainWindow::DisplayImage(){
     ui->image->setPixmap(QPixmap::fromImage(imdisplay));
 }
 
+Point MainWindow::audioFeedbackHandler(Point correctionValue, Point newValue)
+{
+
+    double aproxValue = sqrt(pow(newValue.x, 2) + pow(newValue.y,2));
+
+    // Audible Feedback for correction
+    if(correctionValue != newValue){
+        int newHz = distanceToHz(int(aproxValue), 10);
+        if (newHz == 0){
+            m_audioOutput->setVolume(0);
+        }
+        else if (newHz != toneSampleRateHz){
+            int volume = ui->volumeFeedbackSlider->value();
+            qreal linearVolume = QAudio::convertVolume(volume / qreal(100), QAudio::LogarithmicVolumeScale,
+                                                       QAudio::LinearVolumeScale);
+            m_audioOutput->setVolume(qreal(linearVolume));
+            toneSampleRateHz = newHz;
+            m_generator->stop();
+            m_generator->generateData(format, durationSeconds * 1000000, toneSampleRateHz);
+            m_generator->start();
+        }
+    }
+
+    return newValue;
+}
+
+int MainWindow::distanceToHz(int distance, int steps)
+{
+    int y, a, b, maximo, minimo, stepValues;
+    float stepDist;
+    // Definições
+    y = 200;
+    maximo = 1000;
+    minimo = 200;
+    a = 50;
+    b = 300;
+    stepValues = (maximo - minimo)/steps;
+    stepDist = (b-a)/steps;
+
+    if (distance <= a){
+        y = 0;
+    }
+    else if ((a <= distance) && (distance < b)){
+       // Steps Logic
+        for (int i = 0; i < steps; i++){
+            float aAux = stepDist*i;
+            float bAux = stepDist*(steps-(i+1));
+            if ((a + aAux <= distance) && (distance < (b - bAux))){
+                y = minimo + stepValues*i;
+            }
+        }
+    }
+    else if (b <= distance){
+        y = maximo;
+    }
+    return y;
+}
+
 void MainWindow::MetronomoSlot()
 {
     metronomoTick.play();
 }
 
+/***********************************
+    Metronome Action Functions
+************************************/
 void MainWindow::on_spinBox_valueChanged(int value)
 {
     metronomoValue = 60000/value;
@@ -149,6 +220,39 @@ void MainWindow::on_stopMetronomeButton_clicked()
     m_audioOutput->stop();
 }
 
+void MainWindow::on_metronomeVolumeSlider_valueChanged(int value)
+{
+    qreal linearVolume = QAudio::convertVolume(value / qreal(100), QAudio::LogarithmicVolumeScale,
+                                               QAudio::LinearVolumeScale);
+    metronomoTick.setVolume(linearVolume);
+    ui->labelMetronomeVolume->setText("Volume : " + QString::number(value));
+}
+
+/**************************************
+    Audio Feedback Action Functions
+***************************************/
+void MainWindow::on_volumeFeedbackSlider_valueChanged(int value)
+{
+    qreal linearVolume = QAudio::convertVolume(value / qreal(100), QAudio::LogarithmicVolumeScale,
+                                               QAudio::LinearVolumeScale);
+    m_audioOutput->setVolume(linearVolume);
+    ui->labelFeedbackVolume->setText("Volume : " + QString::number(value));
+}
+
+void MainWindow::on_playFeedbackButton_clicked()
+{
+    // Inicia o streaming de audio
+    m_audioOutput->start(m_generator.data());
+}
+
+void MainWindow::on_stopFeedbackButton_clicked()
+{
+    m_audioOutput->stop();
+}
+
+/*****************************
+    Menu Action Functions
+******************************/
 void MainWindow::on_actionNovo_Gesto_triggered(){
 
     QString fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
@@ -183,8 +287,13 @@ void MainWindow::on_startBt_clicked()
 
 void MainWindow::on_actionTreinar_Gestos_triggered()
 {
-    // Inicia o streaming de audio
-    m_audioOutput->start(m_generator.data());
+    // Show Audio Feedback interface
+    ui->labelAudioFeedback->show();
+    ui->playFeedbackButton->show();
+    ui->stopFeedbackButton->show();
+    ui->volumeFeedbackSlider->show();
+    ui->labelFeedbackVolume->show();
+
     QString fileName = QFileDialog::getOpenFileName(this,"Save as", "gestos/", tr("CSV files (*.csv);;Zip files (*.zip, *.7z)"));
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly)){
@@ -220,44 +329,3 @@ void MainWindow::on_actionNovo_Gesto_PSMove_triggered()
 
 }
 
-void MainWindow::on_volumeSlider_valueChanged(int value)
-{
-    qreal linearVolume = QAudio::convertVolume(value / qreal(100),
-                                               QAudio::LogarithmicVolumeScale,
-                                               QAudio::LinearVolumeScale);
-
-    m_audioOutput->setVolume(linearVolume);
-    metronomoTick.setVolume(linearVolume);
-}
-
-Point MainWindow::audioFeedbackHandler(Point correctionValue, Point newValue)
-{
-
-    double aproxValue = (newValue.x)^2 + (newValue.y)^2;
-    double compValue = (correctionValue.x)^2 + (correctionValue.y)^2;
-
-    // Audible Feedback for correction
-    if(correctionValue != newValue){
-        if(newValue.y < 0){
-            if ( toneSampleRateHz != 440){
-                const int durationSeconds = 1;
-                toneSampleRateHz = 440;
-                m_generator->stop();
-                m_generator->generateData(format, durationSeconds * 1000000, toneSampleRateHz);
-                m_generator->start();
-            }
-        }
-        else if(newValue.y > 0){
-            if ( toneSampleRateHz != 880){
-                const int durationSeconds = 1;
-                toneSampleRateHz = 880;
-                m_generator->stop();
-                m_generator->generateData(format, durationSeconds * 1000000, toneSampleRateHz);
-                m_generator->start();
-            }
-        }
-        correctionValue = newValue;
-    }
-
-    return correctionValue;
-}
