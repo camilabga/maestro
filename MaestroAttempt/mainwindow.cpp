@@ -129,6 +129,7 @@ void MainWindow::DisplayImage(){
     // Plays audible feedback
     correctionValue = audioFeedbackHandler(correctionValue, newValue);
 
+    // Frame Image
     Mat img = vision.getInputImage();
     cv::cvtColor(img,img,CV_BGR2RGB);
     QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
