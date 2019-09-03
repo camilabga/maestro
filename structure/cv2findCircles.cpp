@@ -18,6 +18,8 @@ int main(int argc, char **argv){
     newMask = Mat::ones(frame.rows, frame.cols, CV_8U);
     // ************************
 
+
+
     while (true){
         vector<Vec3f> circles;
     
