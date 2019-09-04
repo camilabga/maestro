@@ -1,10 +1,10 @@
 # Running Qt application
 
-- Firstly you must Download and install Qt Creator and its dependencies with [Qt Online Installer](https://www.qt.io/download).
+Firstly you must Download and install Qt Creator and its dependencies with [Qt Online Installer](https://www.qt.io/download).
 
-- Then, open the Qt Creator and import the `MaestroAttempt.pro` file with **Open Project** option in the Welcome menu.
+- Then, open the Qt Creator and import the [`MaestroAttempt.pro`](MaestroAttempt.pro) file with **Open Project** option in the Welcome menu.
 
-- With the project opened, go to the Edit menu and edit the `MaestroAttempt.pro` file on these lines:
+- With the project opened, go to the Edit menu and edit the [`MaestroAttempt.pro`](MaestroAttempt.pro) file on these lines:
 
         ...
 
@@ -18,7 +18,7 @@
 
 At this point you should compile to make sure it all works
 
-- Finally, edit the static paths to the audio files in the `mainwindow.cpp` to look like this:
+- Finally, edit the static paths to the audio files in the [`mainwindow.cpp`](mainwindow.cpp) to look like this:
 
         ...
 
@@ -49,6 +49,6 @@ At this point you should compile to make sure it all works
 
         }
 
-            ...
+        ...
 
 Now you should be able to compile everything and run!
