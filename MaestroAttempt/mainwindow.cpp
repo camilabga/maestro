@@ -23,7 +23,6 @@ using namespace cv;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    correctionEffect(this),
     proxEffect(this),
     metronomoTick(this)
 {
@@ -42,14 +41,13 @@ MainWindow::MainWindow(QWidget *parent) :
     newGesture = false;
 
     // Correção
-    correctionEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/SimpleAudio/audios/300hz_short.wav"));
-    correctionEffect.setVolume(0.25f);
     correction = false;
     correctionValue.x = 0;
     correctionValue.y = 0;
 
     // Aproximação
-    proxEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/SimpleAudio/audios/metronome_click.wav"));
+    /*-------------------------------------> Mudar caminho para "/YOUR_PATH/maestro/MaestroAttempt/audioFiles/metronome_click.wav" <------*/
+    proxEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/metronome_click.wav"));
     proxEffect.setVolume(0.25f);
 
     // Initialize Audio
@@ -73,7 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Metronomo
     metronomoValue = 60000/40;
-    metronomoTick.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/SimpleAudio/audios/metronome_click.wav"));
+    /*-------------------------------------> Mudar caminho para "/YOUR_PATH/maestro/MaestroAttempt/audioFiles/metronome_click.wav" <------*/
+    metronomoTick.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/metronome_click.wav"));
     metronomoTick.setVolume(0.25f);
     metronomoTimer = new QTimer(this);
     connect(metronomoTimer, SIGNAL(timeout()), this, SLOT(MetronomoSlot()));
@@ -115,11 +114,10 @@ void MainWindow::DisplayImage(){
 
             // Feedback de Tap (Click quando o ponto é trocado)
             currentPoint = trajectory.getCurrentPointId();
-            int midPoint = (trajectory.getSize()) / 4;
+            int midPoint = 5;
             if(int(currentPoint) == midPoint && currentPoint != beforePoint) proxEffect.play();
 
             newValue = vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
-
 
             //weareable.send(trajectory.getError(vision.getCenter()));
             trajectory.savePoint(vision.getCenter());

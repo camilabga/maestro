@@ -84,8 +84,6 @@ private:
     QScopedPointer<QAudioOutput> m_audioOutput;
 
     Point correctionValue;
-    QSoundEffect correctionEffect;
-
     QSoundEffect proxEffect;
 
     QSoundEffect metronomoTick;
