@@ -75,6 +75,8 @@ private slots:
 
     void on_languageButton_clicked();
 
+    void on_vizualizarButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

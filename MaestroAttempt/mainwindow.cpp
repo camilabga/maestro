@@ -367,3 +367,9 @@ void MainWindow::on_languageButton_clicked()
         this->setPortuguese();
     }
 }
+
+
+void MainWindow::on_vizualizarButton_clicked()
+{
+
+}

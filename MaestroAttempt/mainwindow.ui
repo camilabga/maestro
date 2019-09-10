@@ -286,7 +286,7 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>250</x>
       <y>10</y>
       <width>441</width>
       <height>51</height>
@@ -304,6 +304,13 @@
       <widget class="QPushButton" name="treinarButton">
        <property name="text">
         <string>Treinar Gesto</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="vizualizarButton">
+       <property name="text">
+        <string>Vizualizar Gesto</string>
        </property>
       </widget>
      </item>
