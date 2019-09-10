@@ -252,8 +252,8 @@ void MainWindow::on_stopFeedbackButton_clicked()
 /*****************************
     Menu Action Functions
 ******************************/
-void MainWindow::on_actionNovo_Gesto_triggered(){
-
+void MainWindow::on_novoGestoButton_clicked()
+{
     QString fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
     QFile file(fileName);
     if(!file.open(QFile::WriteOnly |QFile::Truncate)){
@@ -265,26 +265,10 @@ void MainWindow::on_actionNovo_Gesto_triggered(){
         ui->stopBt->show();
         ui->startBt->show();
     }
-
 }
 
-void MainWindow::on_stopBt_clicked()
-{
-    Timer->stop(); //Will stop the timer
-    trajectory.endSaving();
-    ui->image->hide();
-    QBrush tb(Qt::transparent);
-    ui->stopBt->hide();
-    ui->startBt->hide();
-}
 
-void MainWindow::on_startBt_clicked()
-{
-    ui->startBt->hide();
-    newGesture = true;
-}
-
-void MainWindow::on_actionTreinar_Gestos_triggered()
+void MainWindow::on_treinarButton_clicked()
 {
     // Show Audio Feedback interface
     ui->labelAudioFeedback->show();
@@ -311,20 +295,37 @@ void MainWindow::on_actionTreinar_Gestos_triggered()
     }
 }
 
-void MainWindow::on_actionNovo_Gesto_PSMove_triggered()
+
+void MainWindow::on_stopBt_clicked()
 {
-    vision.release();
-
-    QString fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
-    QFile file(fileName);
-    if(!file.open(QFile::WriteOnly |QFile::Truncate)){
-        QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
-    }else{
-        std::string command = "python3 ../structure/camera.py ";
-        command += fileName.toStdString();
-        system(command.c_str());
-
-    }
-
+    Timer->stop(); //Will stop the timer
+    trajectory.endSaving();
+    ui->image->hide();
+    QBrush tb(Qt::transparent);
+    ui->stopBt->hide();
+    ui->startBt->hide();
 }
 
+void MainWindow::on_startBt_clicked()
+{
+    ui->startBt->hide();
+    newGesture = true;
+}
+
+
+/*void MainWindow::on_actionNovo_Gesto_PSMove_triggered()
+//{
+//    vision.release();
+
+//    QString fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
+//    QFile file(fileName);
+//    if(!file.open(QFile::WriteOnly |QFile::Truncate)){
+//        QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
+//    }else{
+//        std::string command = "python3 ../structure/camera.py ";
+//        command += fileName.toStdString();
+//        system(command.c_str());
+
+//    }
+
+//} */

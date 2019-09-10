@@ -45,15 +45,9 @@ private slots:
 
     int distanceToHz(int distance, int steps);
 
-    void on_actionNovo_Gesto_triggered();
-
     void on_stopBt_clicked();
 
     void on_startBt_clicked();
-
-    void on_actionTreinar_Gestos_triggered();
-
-    void on_actionNovo_Gesto_PSMove_triggered();
 
     void MetronomoSlot();
 
@@ -70,6 +64,10 @@ private slots:
     void on_stopFeedbackButton_clicked();
 
     void on_metronomeVolumeSlider_valueChanged(int value);
+
+    void on_novoGestoButton_clicked();
+
+    void on_treinarButton_clicked();
 
 private:
     Ui::MainWindow *ui;

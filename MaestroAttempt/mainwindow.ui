@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Maestro v0.1</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="enabled">
@@ -223,7 +223,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -283,6 +283,32 @@
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>58</x>
+      <y>10</y>
+      <width>441</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="gestosLayout">
+     <item>
+      <widget class="QPushButton" name="novoGestoButton">
+       <property name="text">
+        <string>Novo Gesto</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="treinarButton">
+       <property name="text">
+        <string>Treinar Gesto</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -295,11 +321,8 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Menu</string>
     </property>
-    <addaction name="actionNovo_Gesto"/>
-    <addaction name="actionNovo_Gesto_PSMove"/>
-    <addaction name="actionTreinar_Gestos"/>
     <addaction name="actionSair"/>
    </widget>
    <addaction name="menuFile"/>
