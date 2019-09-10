@@ -283,10 +283,10 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>58</x>
+      <x>470</x>
       <y>10</y>
       <width>441</width>
       <height>51</height>
@@ -308,6 +308,19 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="languageButton">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>20</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PT/EN</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -346,6 +359,16 @@
   <action name="actionNovo_Gesto_PSMove">
    <property name="text">
     <string>Novo Gesto PSMove</string>
+   </property>
+  </action>
+  <action name="actionPortugues">
+   <property name="text">
+    <string>Portugues</string>
+   </property>
+  </action>
+  <action name="actionIngles">
+   <property name="text">
+    <string>Ingles</string>
    </property>
   </action>
  </widget>

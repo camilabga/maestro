@@ -69,10 +69,18 @@ private slots:
 
     void on_treinarButton_clicked();
 
+    void setPortuguese();
+
+    void setEnglish();
+
+    void on_languageButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     bool newGesture, correction;
+
+    bool isPt, isEn;
 
     int toneSampleRateHz;
     const int durationSeconds = 1;

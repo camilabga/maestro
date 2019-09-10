@@ -24,18 +24,17 @@ def closestPoint(x, y, pontos):
     global vetorOrd
     vetorOrd.append(pontos[posicao])
 
-
 def onclick(event):
     global pontos
     closestPoint(event.xdata, event.ydata, pontos)
 
-
 fig, ax = plt.subplots()
 fig.canvas.mpl_connect('button_press_event', onclick)
 
-plt.plot(pontos[:,0], pontos[:,1],'r.')
+plt.plot(pontos[:,0], 480-pontos[:,1],'r.')
 plt.show()
 
-np.savetxt('aaaaaaaaaaaaaaaaaaa.csv', vetorOrd, delimiter= ',', fmt='%.5f')
+outputFile = input('Salvar como (... .csv) :')
+np.savetxt(outputFile+'.csv', vetorOrd, delimiter= ',', fmt='%.5f')
 
     

@@ -26,12 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     proxEffect(this),
     metronomoTick(this)
 {
-
     ui->setupUi(this);
     Timer = new QTimer(this);
     connect(Timer, SIGNAL(timeout()), this, SLOT(DisplayImage()));
     ui->stopBt->hide();
     ui->startBt->hide();
+
+    /* Language Settings, starting as portuguese. */
+    isPt = true;
+    isEn = false;
+    this->setPortuguese();
+
     // Hide Audio Feedback interface
     ui->labelAudioFeedback->hide();
     ui->playFeedbackButton->hide();
@@ -197,9 +202,9 @@ void MainWindow::MetronomoSlot()
     metronomoTick.play();
 }
 
-/***********************************
-    Metronome Action Functions
-************************************/
+/*******************************************
+        Metronome Action Functions
+********************************************/
 void MainWindow::on_spinBox_valueChanged(int value)
 {
     metronomoValue = 60000/value;
@@ -227,9 +232,9 @@ void MainWindow::on_metronomeVolumeSlider_valueChanged(int value)
     ui->labelMetronomeVolume->setText("Volume : " + QString::number(value));
 }
 
-/**************************************
-    Audio Feedback Action Functions
-***************************************/
+/************************************************
+        Audio Feedback Action Functions
+*************************************************/
 void MainWindow::on_volumeFeedbackSlider_valueChanged(int value)
 {
     qreal linearVolume = QAudio::convertVolume(value / qreal(100), QAudio::LogarithmicVolumeScale,
@@ -249,9 +254,9 @@ void MainWindow::on_stopFeedbackButton_clicked()
     m_audioOutput->stop();
 }
 
-/*****************************
-    Menu Action Functions
-******************************/
+/************************************
+        Menu Action Functions
+*************************************/
 void MainWindow::on_novoGestoButton_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
@@ -266,7 +271,6 @@ void MainWindow::on_novoGestoButton_clicked()
         ui->startBt->show();
     }
 }
-
 
 void MainWindow::on_treinarButton_clicked()
 {
@@ -295,7 +299,6 @@ void MainWindow::on_treinarButton_clicked()
     }
 }
 
-
 void MainWindow::on_stopBt_clicked()
 {
     Timer->stop(); //Will stop the timer
@@ -312,20 +315,55 @@ void MainWindow::on_startBt_clicked()
     newGesture = true;
 }
 
+/************************************
+        Language Functions
+*************************************/
+void MainWindow::setPortuguese()
+{
+    // Buttons
+    ui->startMetronomeButton->setText("Começar/Regular");
+    ui->playFeedbackButton->setText("Começar");
+    ui->startBt->setText("Começar");
+    ui->stopMetronomeButton->setText("Parar");
+    ui->stopFeedbackButton->setText("Parar");
+    ui->stopBt->setText("Parar");
+    ui->treinarButton->setText("Treinar Gesto");
+    ui->novoGestoButton->setText("Novo Gesto");
+    // Labels
+    ui->labelMetronome->setText("Metrônomo");
+    ui->labelAudioFeedback->setText("Retorno Auditivo");
+    // Menu
+    ui->actionSair->setText("Sair");
+}
 
-/*void MainWindow::on_actionNovo_Gesto_PSMove_triggered()
-//{
-//    vision.release();
+void MainWindow::setEnglish()
+{
+    // Buttons
+    ui->startMetronomeButton->setText("Start/Set");
+    ui->playFeedbackButton->setText("Start");
+    ui->startBt->setText("Start");
+    ui->stopMetronomeButton->setText("Stop");
+    ui->stopFeedbackButton->setText("Stop");
+    ui->stopBt->setText("Stop");
+    ui->treinarButton->setText("Practice Gesture");
+    ui->novoGestoButton->setText("New Gesture");
+    // Labels
+    ui->labelMetronome->setText("Metronome");
+    ui->labelAudioFeedback->setText("Audio Feedback");
+    // Menu
+    ui->actionSair->setText("Quit");
+}
 
-//    QString fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
-//    QFile file(fileName);
-//    if(!file.open(QFile::WriteOnly |QFile::Truncate)){
-//        QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
-//    }else{
-//        std::string command = "python3 ../structure/camera.py ";
-//        command += fileName.toStdString();
-//        system(command.c_str());
-
-//    }
-
-//} */
+void MainWindow::on_languageButton_clicked()
+{
+    if(isPt){
+        this->setEnglish();
+        isEn = true;
+        isPt = false;
+    }
+    else {
+        isPt = true;
+        isEn = false;
+        this->setPortuguese();
+    }
+}
