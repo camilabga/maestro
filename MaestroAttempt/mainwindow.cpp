@@ -315,6 +315,20 @@ void MainWindow::on_startBt_clicked()
     newGesture = true;
 }
 
+void MainWindow::on_vizualizarButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
+    QFile file(fileName);
+    if(!file.open(QFile::ReadOnly)){
+        QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
+    }else{
+        std::string command = "python3 plot.py ";
+        command += fileName.toStdString();
+        system(command.c_str());
+
+    }
+}
+
 /************************************
         Language Functions
 *************************************/
@@ -368,8 +382,3 @@ void MainWindow::on_languageButton_clicked()
     }
 }
 
-
-void MainWindow::on_vizualizarButton_clicked()
-{
-
-}
