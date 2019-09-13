@@ -35,17 +35,17 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>310</y>
+      <x>970</x>
+      <y>380</y>
       <width>251</width>
-      <height>181</height>
+      <height>171</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="metronomeLayout">
      <item>
       <widget class="QLabel" name="labelMetronome">
        <property name="text">
-        <string>Metronome</string>
+        <string>Metrônomo</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -111,14 +111,14 @@
      <item>
       <widget class="QPushButton" name="startMetronomeButton">
        <property name="text">
-        <string>Start / Set</string>
+        <string>Começar/Parar</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="stopMetronomeButton">
+      <widget class="QPushButton" name="tapButton">
        <property name="text">
-        <string>Stop</string>
+        <string>Tap</string>
        </property>
       </widget>
      </item>
@@ -127,17 +127,50 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>140</y>
+      <x>970</x>
+      <y>124</y>
       <width>251</width>
-      <height>141</height>
+      <height>201</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="audioFeedbackLayout">
+    <layout class="QVBoxLayout" name="feedbackLayout">
+     <item>
+      <widget class="QLabel" name="labelPulsiera">
+       <property name="text">
+        <string>Feedback Tátil</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pulsieraButton">
+       <property name="text">
+        <string>Ligar/Desligar Pulseira</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="pulsieraSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
      <item>
       <widget class="QLabel" name="labelAudioFeedback">
        <property name="text">
-        <string>Audio Feedback</string>
+        <string>Feedback Auditivo</string>
        </property>
        <property name="textFormat">
         <enum>Qt::RichText</enum>
@@ -170,14 +203,7 @@
      <item>
       <widget class="QPushButton" name="playFeedbackButton">
        <property name="text">
-        <string>Play</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stopFeedbackButton">
-       <property name="text">
-        <string>Stop</string>
+        <string>Começar/Parar</string>
        </property>
       </widget>
      </item>
@@ -283,50 +309,110 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>10</y>
-      <width>441</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="gestosLayout">
-     <item>
-      <widget class="QPushButton" name="novoGestoButton">
-       <property name="text">
-        <string>Novo Gesto</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="treinarButton">
-       <property name="text">
-        <string>Treinar Gesto</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="vizualizarButton">
-       <property name="text">
-        <string>Vizualizar Gesto</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="languageButton">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>20</y>
+      <x>1180</x>
+      <y>620</y>
       <width>61</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>PT/EN</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="praticaLivreButton">
+    <property name="geometry">
+     <rect>
+      <x>61</x>
+      <y>41</y>
+      <width>141</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Pratica Livre</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>341</x>
+      <y>37</y>
+      <width>271</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="salvarMenuLayout">
+     <item>
+      <widget class="QPushButton" name="salvarButton">
+       <property name="text">
+        <string>Salvar Video</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="vizualizarButton">
+       <property name="text">
+        <string>Mostrar Gráfico</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>758</x>
+      <y>41</y>
+      <width>301</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="treinarLayout">
+     <item>
+      <widget class="QPushButton" name="treinarButton">
+       <property name="text">
+        <string>Treinar Compasso</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="treinarBox">
+       <item>
+        <property name="text">
+         <string>Binário</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ternário</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Quaternário</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="labelCompasso">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>0</y>
+      <width>361</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Seleção de Padrões de Marcação de Compasso</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>

@@ -29,20 +29,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     Timer = new QTimer(this);
     connect(Timer, SIGNAL(timeout()), this, SLOT(DisplayImage()));
-    ui->stopBt->hide();
-    ui->startBt->hide();
+
+    // States Seting
+    isMetrnonomeOn = false;
+    isAudibleFeedbackOn = false;
+    isTapOn = true;
+    isTreinarOn = false;
+    isLivreOn = false;
+    gravarGesto = false;
 
     /* Language Settings, starting as portuguese. */
     isPt = true;
     isEn = false;
     this->setPortuguese();
 
-    // Hide Audio Feedback interface
-    ui->labelAudioFeedback->hide();
-    ui->playFeedbackButton->hide();
-    ui->stopFeedbackButton->hide();
-    ui->volumeFeedbackSlider->hide();
-    ui->labelFeedbackVolume->hide();
+    // Sets inicial interface
+    this->gravarMenuShow(false);
+    this->salvarMenuShow(false);
+    this->feedbackMenuShow(false);
     newGesture = false;
 
     // Correção
@@ -98,13 +102,13 @@ void MainWindow::DisplayImage(){
 
     ui->image->show();
 
-    vision.calculateTagCenter();
+ //   vision.calculateTagCenter();
     vision.circleTracker();
 
     if(newGesture){
         if (vision.isTargetOn()) {
             trajectory.savePoint(vision.getCenter());
-            vision.saveVideo();
+            //vision.saveVideo();
         }
         vision.saveVideo();
 
@@ -119,14 +123,17 @@ void MainWindow::DisplayImage(){
 
             // Feedback de Tap (Click quando o ponto é trocado)
             currentPoint = trajectory.getCurrentPointId();
-            int midPoint = 5;
-            if(int(currentPoint) == midPoint && currentPoint != beforePoint) proxEffect.play();
+            int midPoint = 9;
+            if((currentPoint != beforePoint) && isTapOn) {
+                if(int(currentPoint) == midPoint || int(currentPoint) == 19)  proxEffect.play();
+            }
 
             newValue = vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
 
             //weareable.send(trajectory.getError(vision.getCenter()));
-            trajectory.savePoint(vision.getCenter());
+            if(gravarGesto) trajectory.savePoint(vision.getCenter());
         }
+
     }
 
     // Plays audible feedback
@@ -197,6 +204,36 @@ int MainWindow::distanceToHz(int distance, int steps)
     return y;
 }
 
+void MainWindow::salvarCSV()
+{
+    QMessageBox::information(this,"Aviso","informe o nome do arquivo csv a ser salvo");
+    fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
+    QFile file(fileName);
+    if(!file.open(QFile::WriteOnly |QFile::Truncate)){
+        QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
+    }else{
+        trajectory.saveMovement(fileName.toStdString());
+    }
+}
+
+void MainWindow::treinarShow(bool enable)
+{
+    if(enable){
+        ui->labelCompasso->show();
+        ui->treinarBox->show();
+        ui->treinarButton->show();
+        ui->treinarBox->show();
+        ui->praticaLivreButton->show();
+    }
+    else {
+        ui->labelCompasso->hide();
+        ui->treinarBox->hide();
+        ui->treinarButton->hide();
+        ui->treinarBox->hide();
+        ui->praticaLivreButton->hide();
+    }
+}
+
 void MainWindow::MetronomoSlot()
 {
     metronomoTick.play();
@@ -209,19 +246,22 @@ void MainWindow::on_spinBox_valueChanged(int value)
 {
     metronomoValue = 60000/value;
     qDebug() << metronomoValue;
-}
-
-void MainWindow::on_startMetronomeButton_clicked()
-{
     metronomoTick.stop();
     metronomoTimer->start(metronomoValue);
 }
 
-void MainWindow::on_stopMetronomeButton_clicked()
+void MainWindow::on_startMetronomeButton_clicked()
 {
-    metronomoTick.stop();
-    metronomoTimer->stop();
-    m_audioOutput->stop();
+    if(!isMetrnonomeOn){
+        metronomoTick.stop();
+        metronomoTimer->start(metronomoValue);
+        isMetrnonomeOn = true;
+    }
+    else {
+        metronomoTick.stop();
+        metronomoTimer->stop();
+        isMetrnonomeOn = false;
+    }
 }
 
 void MainWindow::on_metronomeVolumeSlider_valueChanged(int value)
@@ -245,42 +285,45 @@ void MainWindow::on_volumeFeedbackSlider_valueChanged(int value)
 
 void MainWindow::on_playFeedbackButton_clicked()
 {
-    // Inicia o streaming de audio
-    m_audioOutput->start(m_generator.data());
+    if(!isAudibleFeedbackOn){
+        // Inicia o streaming de audio
+        m_audioOutput->start(m_generator.data());
+    }
+    else {
+        m_audioOutput->stop();
+    }
 }
 
-void MainWindow::on_stopFeedbackButton_clicked()
+void MainWindow::on_tapButton_clicked()
 {
-    m_audioOutput->stop();
+    if(!isTapOn) isTapOn = true;
+    else isTapOn = false;
 }
-
 /************************************
         Menu Action Functions
 *************************************/
-void MainWindow::on_novoGestoButton_clicked()
-{
-    QString fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
-    QFile file(fileName);
-    if(!file.open(QFile::WriteOnly |QFile::Truncate)){
+void MainWindow::on_praticaLivreButton_clicked()
+{   
+    salvarCSV();
+    QMessageBox::information(this,"Aviso","informe o nome do arquivo de video a ser salvo");
+    QString fileName1 = QFileDialog::getSaveFileName(this,"Save as", "Videos/filename.avi", "AVI files (.avi);", 0, 0);
+    QFile file1(fileName1);
+    if(!file1.open(QFile::WriteOnly |QFile::Truncate)){
         QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
     }else{
-        trajectory.saveMovement(fileName.toStdString());
-        vision.record("Videos/random_test.avi");
+        vision.record("Videos/"+fileName1.toStdString());
         Timer->start(); //Will start the timer
-        ui->stopBt->show();
-        ui->startBt->show();
+
+       this->praticarInterface();
     }
+    isLivreOn = true;
+    isTreinarOn = false;
 }
 
 void MainWindow::on_treinarButton_clicked()
 {
-    // Show Audio Feedback interface
-    ui->labelAudioFeedback->show();
-    ui->playFeedbackButton->show();
-    ui->stopFeedbackButton->show();
-    ui->volumeFeedbackSlider->show();
-    ui->labelFeedbackVolume->show();
-
+    salvarCSV();
+    QMessageBox::information(this,"Aviso","informe o nome do arquivo csv a ser lido");
     QString fileName = QFileDialog::getOpenFileName(this,"Save as", "gestos/", tr("CSV files (*.csv);;Zip files (*.zip, *.7z)"));
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly)){
@@ -290,12 +333,15 @@ void MainWindow::on_treinarButton_clicked()
         trajectory.unnormalize2();
         //trajectory.getPointsFromnCSV(fileName.toStdString());
         //trajectory.unnormalize();
-        trajectory.saveMovement("/data/random_test.csv");
         weareable.setIP((char*)"192.168.43.236");
         weareable.start();
         correction = true;
         std::cerr<<"Trajetoria "<<trajectory.getSize();
         Timer->start();
+
+        this->treinarInterface();
+        isTreinarOn = true;
+        isLivreOn = false;
     }
 }
 
@@ -305,19 +351,23 @@ void MainWindow::on_stopBt_clicked()
     trajectory.endSaving();
     ui->image->hide();
     QBrush tb(Qt::transparent);
-    ui->stopBt->hide();
-    ui->startBt->hide();
+    this->salvarMenuShow(true);
+    this->gravarMenuShow(false);
+    this->treinarShow(true);
+    if(isTreinarOn) isTreinarOn = false;
+    if(isLivreOn) isLivreOn = false;
+    gravarGesto=false;
 }
 
 void MainWindow::on_startBt_clicked()
 {
     ui->startBt->hide();
-    newGesture = true;
+    if(!isTreinarOn) newGesture = true;
+    gravarGesto=true;
 }
 
 void MainWindow::on_vizualizarButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly)){
         QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
@@ -325,8 +375,14 @@ void MainWindow::on_vizualizarButton_clicked()
         std::string command = "python3 plot.py ";
         command += fileName.toStdString();
         system(command.c_str());
-
     }
+}
+
+void MainWindow::on_salvarButton_clicked()
+{
+    vision.endRecording();
+    QMessageBox::question(this,"Aviso","Video salvo!");
+    ui->salvarButton->hide();
 }
 
 /************************************
@@ -335,37 +391,49 @@ void MainWindow::on_vizualizarButton_clicked()
 void MainWindow::setPortuguese()
 {
     // Buttons
-    ui->startMetronomeButton->setText("Começar/Regular");
-    ui->playFeedbackButton->setText("Começar");
+    ui->startMetronomeButton->setText("Começar/Parar");
+    ui->playFeedbackButton->setText("Começar/Parar");
     ui->startBt->setText("Começar");
-    ui->stopMetronomeButton->setText("Parar");
-    ui->stopFeedbackButton->setText("Parar");
     ui->stopBt->setText("Parar");
-    ui->treinarButton->setText("Treinar Gesto");
-    ui->novoGestoButton->setText("Novo Gesto");
+    ui->pulsieraButton->setText("Começar/Parar");
+    ui->treinarButton->setText("Treinar Compasso");
+    ui->praticaLivreButton->setText("Treino Livre");
+    ui->vizualizarButton->setText("Gerar Gráfico");
     // Labels
     ui->labelMetronome->setText("Metrônomo");
     ui->labelAudioFeedback->setText("Retorno Auditivo");
+    ui->labelPulsiera->setText("Retorno Tátil");
+    ui->labelCompasso->setText("Seleção de Padrões de Marcação de Compasso");
     // Menu
     ui->actionSair->setText("Sair");
+    // Combo Box
+    ui->treinarBox->setItemText(0, "Binário");
+    ui->treinarBox->setItemText(1, "Ternário");
+    ui->treinarBox->setItemText(2, "Quaternário");
 }
 
 void MainWindow::setEnglish()
 {
     // Buttons
-    ui->startMetronomeButton->setText("Start/Set");
-    ui->playFeedbackButton->setText("Start");
+    ui->startMetronomeButton->setText("Start/Stop");
+    ui->playFeedbackButton->setText("Start/Stop");
     ui->startBt->setText("Start");
-    ui->stopMetronomeButton->setText("Stop");
-    ui->stopFeedbackButton->setText("Stop");
     ui->stopBt->setText("Stop");
-    ui->treinarButton->setText("Practice Gesture");
-    ui->novoGestoButton->setText("New Gesture");
+    ui->pulsieraButton->setText("Start/Stop");
+    ui->treinarButton->setText("Practice Compass");
+    ui->praticaLivreButton->setText("Free Practice");
+    ui->vizualizarButton->setText("Plot Graph");
     // Labels
-    ui->labelMetronome->setText("Metronome");
-    ui->labelAudioFeedback->setText("Audio Feedback");
+    ui->labelMetronome->setText("Metrnome");
+    ui->labelAudioFeedback->setText("Audible Feedback");
+    ui->labelPulsiera->setText("Tactile Feedback");
+    ui->labelCompasso->setText("Select Compass Markers Patterns");
     // Menu
     ui->actionSair->setText("Quit");
+    // Combo Box
+    ui->treinarBox->setItemText(0, "Binary");
+    ui->treinarBox->setItemText(1, "Ternary");
+    ui->treinarBox->setItemText(2, "Quaternary");
 }
 
 void MainWindow::on_languageButton_clicked()
@@ -382,3 +450,70 @@ void MainWindow::on_languageButton_clicked()
     }
 }
 
+/************************************
+        Hide-Show Functions
+*************************************/
+void MainWindow::praticarInterface()
+{
+    // Sets the interface for the Free Practice situation
+    this->feedbackMenuShow(false);
+    this->salvarMenuShow(false);
+    this->gravarMenuShow(true);
+    this->treinarShow(false);
+}
+
+void MainWindow::treinarInterface()
+{
+    this->gravarMenuShow(true);
+    this->feedbackMenuShow(true);
+    this->salvarMenuShow(false);
+    ui->praticaLivreButton->hide();
+}
+
+void MainWindow::salvarMenuShow(bool enable)
+{
+    if (enable){
+        ui->salvarButton->show();
+        ui->vizualizarButton->show();
+    }
+    else{
+        ui->salvarButton->hide();
+        ui->vizualizarButton->hide();
+    }
+}
+
+void MainWindow::feedbackMenuShow(bool enable)
+{
+    if (enable){
+        // Show Audio Feedback interface
+        ui->labelPulsiera->show();
+        ui->pulsieraButton->show();
+        ui->labelAudioFeedback->show();
+        ui->playFeedbackButton->show();
+        ui->volumeFeedbackSlider->show();
+        ui->labelFeedbackVolume->show();
+        ui->tapButton->show();
+    }
+    else{
+        // Hide Audio Feedback interface
+        ui->labelPulsiera->hide();
+        ui->pulsieraButton->hide();
+        ui->labelAudioFeedback->hide();
+        ui->playFeedbackButton->hide();
+        ui->volumeFeedbackSlider->hide();
+        ui->labelFeedbackVolume->hide();
+        ui->tapButton->hide();
+    }
+}
+
+void MainWindow::gravarMenuShow(bool enable)
+{
+    if (enable){
+        ui->startBt->show();
+        ui->stopBt->show();
+    }
+    else {
+        ui->startBt->hide();
+        ui->stopBt->hide();
+    }
+}

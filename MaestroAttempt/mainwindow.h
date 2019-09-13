@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include "Vision.h"
@@ -41,48 +41,66 @@ public:
 
 private slots:
 
+    // Class Functions
     Point audioFeedbackHandler(Point correctionValue, Point newValue);
 
     int distanceToHz(int distance, int steps);
 
-    void on_stopBt_clicked();
+    void salvarCSV();
 
-    void on_startBt_clicked();
+    void treinarShow(bool enable);
 
-    void MetronomoSlot();
+    void praticarInterface();
 
-    void on_spinBox_valueChanged(int arg1);
+    void treinarInterface();
 
-    void on_startMetronomeButton_clicked();
+    void salvarMenuShow(bool enable);
 
-    void on_stopMetronomeButton_clicked();
+    void feedbackMenuShow(bool enable);
 
-    void on_volumeFeedbackSlider_valueChanged(int value);
-
-    void on_playFeedbackButton_clicked();
-
-    void on_stopFeedbackButton_clicked();
-
-    void on_metronomeVolumeSlider_valueChanged(int value);
-
-    void on_novoGestoButton_clicked();
-
-    void on_treinarButton_clicked();
+    void gravarMenuShow(bool enable);
 
     void setPortuguese();
 
     void setEnglish();
 
+    // Slots Functions
+    void MetronomoSlot();
+
+    // Events functions
+    void on_stopBt_clicked();
+
+    void on_startBt_clicked();
+
+    void on_spinBox_valueChanged(int arg1);
+
+    void on_startMetronomeButton_clicked();
+
+    void on_volumeFeedbackSlider_valueChanged(int value);
+
+    void on_playFeedbackButton_clicked();
+
+    void on_metronomeVolumeSlider_valueChanged(int value);
+
+    void on_treinarButton_clicked();
+
     void on_languageButton_clicked();
 
     void on_vizualizarButton_clicked();
+
+    void on_praticaLivreButton_clicked();
+
+    void on_tapButton_clicked();
+
+    void on_salvarButton_clicked();
 
 private:
     Ui::MainWindow *ui;
 
     bool newGesture, correction;
 
-    bool isPt, isEn;
+    bool isPt, isEn, isMetrnonomeOn, isAudibleFeedbackOn,
+         isTapOn, isTreinarOn, isLivreOn, gravarGesto;
 
     int toneSampleRateHz;
     const int durationSeconds = 1;
@@ -97,6 +115,8 @@ private:
     QSoundEffect metronomoTick;
     QTimer *metronomoTimer;
     int metronomoValue;
+
+    QString fileName;
 };
 
 #endif // MAINWINDOW_H

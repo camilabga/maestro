@@ -7,6 +7,7 @@ file_name = sys.argv[1]
 my_data = np.genfromtxt(file_name, delimiter=',')
 pontos =  my_data
 vetorOrd = []
+tam = 0
 
 def distanciaQ(x1,y1,x2,y2):
     return ((x2-x1)**2)+((y2-y1)**2)
@@ -26,12 +27,15 @@ def closestPoint(x, y, pontos):
 
 def onclick(event):
     global pontos
-    closestPoint(event.xdata, event.ydata, pontos)
+    global tam
+    tam = tam + 1
+    print(tam)
+    closestPoint(1-event.xdata, 480-event.ydata, pontos)
 
 fig, ax = plt.subplots()
 fig.canvas.mpl_connect('button_press_event', onclick)
 
-plt.plot(pontos[:,0], 480-pontos[:,1],'r.')
+plt.plot(1-pontos[:,0], 480-pontos[:,1],'r.')
 plt.show()
 
 outputFile = input('Salvar como (... .csv) :')

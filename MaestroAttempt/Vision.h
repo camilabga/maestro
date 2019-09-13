@@ -125,6 +125,7 @@ class Vision {
   }
   inline void release() { TheVideoCapturer.release(); }
   void record(string filename);
+  void endRecording(){video.release();}
 };
 
 #endif
