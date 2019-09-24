@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include "Vision.h"
 //#include "Weareable.h"
 #include "Trajectory.h"
@@ -55,9 +54,10 @@ MainWindow::MainWindow(QWidget *parent) :
     correctionValue.y = 0;
 
     // Aproximação
-    /*-------------------------------------> Mudar caminho para "/YOUR_PATH/maestro/MaestroAttempt/audioFiles/metronome_click.wav" <------*/
+    /*-------------------------------------> Mudar caminho para "/YOUR_PATH/maestro/MaestroAttempt/audioFiles/YOUR_EFFECT.wav" <------*/
     proxEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/metronome_click.wav"));
     proxEffect.setVolume(0.25f);
+
 
     // Initialize Audio
     format.setSampleRate(44100);
@@ -299,6 +299,7 @@ void MainWindow::on_tapButton_clicked()
     if(!isTapOn) isTapOn = true;
     else isTapOn = false;
 }
+
 /************************************
         Menu Action Functions
 *************************************/

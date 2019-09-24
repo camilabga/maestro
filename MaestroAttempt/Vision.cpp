@@ -195,9 +195,12 @@ void Vision::circleTracker(){
     Mat frameBlur, imageHSV, mask;
     GaussianBlur(TheInputImageCopy, frameBlur, Size(7,7), 0, 0);
     cvtColor(frameBlur, imageHSV, COLOR_BGR2HSV);
-    inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
+    // Green
+    inRange(imageHSV, Scalar(85, 0, 250), Scalar(95, 255, 255), mask);
+    // Pink
+    //inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
 
-    Mat element = getStructuringElement(MORPH_ELLIPSE, Size(10, 10), Point(-1,-1));
+    Mat element = getStructuringElement(MORPH_ELLIPSE, Size(5, 5), Point(-1,-1));
     erode(mask, mask, element);
     dilate(mask, mask, element);
 

@@ -29,9 +29,9 @@ int main(int argc, char **argv){
 
         //Retorna uma imagem binary do resultado do filtro
         //inRange(imageHSV, Scalar(55, 144, 17), Scalar(140, 255, 255), mask);
-        inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
+        inRange(imageHSV, Scalar(85, 0, 250), Scalar(95, 255, 255), mask);
 
-        Mat element = getStructuringElement( MORPH_ELLIPSE, Size(10, 10), Point(-1,-1));
+        Mat element = getStructuringElement( MORPH_ELLIPSE, Size(5, 5), Point(-1,-1));
         erode(mask, mask, element);
         dilate(mask, mask, element);
 
@@ -40,17 +40,7 @@ int main(int argc, char **argv){
         multiply(mask, newMask, mask);
 
         //HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 100, 20, 0, 0 );
-        HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 5, 100);
-
-        if (!circles.empty()){
-            newMask = Mat::zeros(frame.rows, frame.cols, CV_8U);
-            Rect rect;
-            int offs = 100;
-            rect = Rect(Point(circles[0][0] - offs, circles[0][1] - offs), 
-                        Point(circles[0][0] + offs, circles[0][1] + offs));
-
-            rectangle(newMask, rect, 1, CV_FILLED, 8, 0);  
-        }
+        HoughCircles(mask, circles, CV_HOUGH_GRADIENT, 1, 150, 50, 10, 0, 100);
 
         //************ new addition ***************//
 
