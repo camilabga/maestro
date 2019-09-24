@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     proxEffect(this),
+    startEffect(this),
+    selectEffect(this),
     metronomoTick(this)
 {
     ui->setupUi(this);
@@ -57,6 +59,10 @@ MainWindow::MainWindow(QWidget *parent) :
     /*-------------------------------------> Mudar caminho para "/YOUR_PATH/maestro/MaestroAttempt/audioFiles/YOUR_EFFECT.wav" <------*/
     proxEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/metronome_click.wav"));
     proxEffect.setVolume(0.25f);
+    selectEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/beat.wav"));
+    selectEffect.setVolume(0.25f);
+    startEffect.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/startup.wav"));
+    startEffect.setVolume(0.25f);
 
 
     // Initialize Audio
@@ -85,6 +91,8 @@ MainWindow::MainWindow(QWidget *parent) :
     metronomoTick.setVolume(0.25f);
     metronomoTimer = new QTimer(this);
     connect(metronomoTimer, SIGNAL(timeout()), this, SLOT(MetronomoSlot()));
+
+    startEffect.play();
 
 }
 
@@ -216,24 +224,6 @@ void MainWindow::salvarCSV()
     }
 }
 
-void MainWindow::treinarShow(bool enable)
-{
-    if(enable){
-        ui->labelCompasso->show();
-        ui->treinarBox->show();
-        ui->treinarButton->show();
-        ui->treinarBox->show();
-        ui->praticaLivreButton->show();
-    }
-    else {
-        ui->labelCompasso->hide();
-        ui->treinarBox->hide();
-        ui->treinarButton->hide();
-        ui->treinarBox->hide();
-        ui->praticaLivreButton->hide();
-    }
-}
-
 void MainWindow::MetronomoSlot()
 {
     metronomoTick.play();
@@ -319,6 +309,7 @@ void MainWindow::on_praticaLivreButton_clicked()
     }
     isLivreOn = true;
     isTreinarOn = false;
+    selectEffect.play();
 }
 
 void MainWindow::on_treinarButton_clicked()
@@ -343,6 +334,7 @@ void MainWindow::on_treinarButton_clicked()
         this->treinarInterface();
         isTreinarOn = true;
         isLivreOn = false;
+        selectEffect.play();
     }
 }
 
@@ -516,5 +508,36 @@ void MainWindow::gravarMenuShow(bool enable)
     else {
         ui->startBt->hide();
         ui->stopBt->hide();
+    }
+}
+
+void MainWindow::treinarShow(bool enable)
+{
+    if(enable){
+        ui->labelCompasso->show();
+        ui->treinarBox->show();
+        ui->treinarButton->show();
+        ui->treinarBox->show();
+        ui->praticaLivreButton->show();
+    }
+    else {
+        ui->labelCompasso->hide();
+        ui->treinarBox->hide();
+        ui->treinarButton->hide();
+        ui->treinarBox->hide();
+        ui->praticaLivreButton->hide();
+    }
+}
+
+void MainWindow::IMBShow(bool enable)
+{
+    if(enable){
+    }
+    else {
+        ui->labelCompasso->hide();
+        ui->treinarBox->hide();
+        ui->treinarButton->hide();
+        ui->treinarBox->hide();
+        ui->praticaLivreButton->hide();
     }
 }

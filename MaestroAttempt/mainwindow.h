@@ -48,8 +48,6 @@ private slots:
 
     void salvarCSV();
 
-    void treinarShow(bool enable);
-
     void praticarInterface();
 
     void treinarInterface();
@@ -59,6 +57,10 @@ private slots:
     void feedbackMenuShow(bool enable);
 
     void gravarMenuShow(bool enable);
+
+    void treinarShow(bool enable);
+
+    void IMBShow(bool enable);
 
     void setPortuguese();
 
@@ -110,7 +112,7 @@ private:
     QScopedPointer<QAudioOutput> m_audioOutput;
 
     Point correctionValue;
-    QSoundEffect proxEffect;
+    QSoundEffect proxEffect, startEffect, selectEffect;
 
     QSoundEffect metronomoTick;
     QTimer *metronomoTimer;
