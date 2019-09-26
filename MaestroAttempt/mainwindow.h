@@ -96,13 +96,18 @@ private slots:
 
     void on_salvarButton_clicked();
 
+    void on_pulsieraButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     bool newGesture, correction;
 
     bool isPt, isEn, isMetrnonomeOn, isAudibleFeedbackOn,
-         isTapOn, isTreinarOn, isLivreOn, gravarGesto;
+         isTapOn, isTreinarOn, isLivreOn, gravarGesto,
+         weareableIsOn;
+
+    char* espIP;
 
     int toneSampleRateHz;
     const int durationSeconds = 1;

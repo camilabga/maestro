@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     isTreinarOn = false;
     isLivreOn = false;
     gravarGesto = false;
+    weareableIsOn = true;
+    espIP = (char*)"10.6.4.143";
 
     /* Language Settings, starting as portuguese. */
     isPt = true;
@@ -127,7 +129,8 @@ void MainWindow::DisplayImage(){
         beforePoint = trajectory.getCurrentPointId();
 
         if (vision.isTargetOn()) {
-            trajectory.setNextPoint0(vision.getCenter());
+            // Descomentar para mudar os pontos
+            //trajectory.setNextPoint0(vision.getCenter());
 
             // Feedback de Tap (Click quando o ponto é trocado)
             currentPoint = trajectory.getCurrentPointId();
@@ -138,7 +141,7 @@ void MainWindow::DisplayImage(){
 
             newValue = vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
 
-            //weareable.send(trajectory.getError(vision.getCenter()));
+            if (weareableIsOn) weareable.send(trajectory.getError(vision.getCenter()));
             if(gravarGesto) trajectory.savePoint(vision.getCenter());
         }
 
@@ -282,12 +285,25 @@ void MainWindow::on_playFeedbackButton_clicked()
     else {
         m_audioOutput->stop();
     }
+    isAudibleFeedbackOn = !isAudibleFeedbackOn;
 }
 
 void MainWindow::on_tapButton_clicked()
 {
     if(!isTapOn) isTapOn = true;
     else isTapOn = false;
+}
+
+void MainWindow::on_pulsieraButton_clicked()
+{
+    if(weareableIsOn){
+        weareable.setIP((char*)"0.0.0.000");
+         QMessageBox::warning(this,"Aviso","Pulseira Desativada");
+    } else {
+        weareable.setIP(espIP);
+         QMessageBox::warning(this,"Aviso","Pulseira Ativada");
+    }
+    weareableIsOn = !weareableIsOn;
 }
 
 /************************************
@@ -309,6 +325,7 @@ void MainWindow::on_praticaLivreButton_clicked()
     }
     isLivreOn = true;
     isTreinarOn = false;
+    this->IMBShow(false);
     selectEffect.play();
 }
 
@@ -325,7 +342,7 @@ void MainWindow::on_treinarButton_clicked()
         trajectory.unnormalize2();
         //trajectory.getPointsFromnCSV(fileName.toStdString());
         //trajectory.unnormalize();
-        weareable.setIP((char*)"192.168.43.236");
+        weareable.setIP(espIP);
         weareable.start();
         correction = true;
         std::cerr<<"Trajetoria "<<trajectory.getSize();
@@ -335,6 +352,7 @@ void MainWindow::on_treinarButton_clicked()
         isTreinarOn = true;
         isLivreOn = false;
         selectEffect.play();
+        this->IMBShow(false);
     }
 }
 
@@ -532,12 +550,13 @@ void MainWindow::treinarShow(bool enable)
 void MainWindow::IMBShow(bool enable)
 {
     if(enable){
+        ui->imbBox->show();
+        ui->imbButton->show();
+        ui->labelIBM->show();
     }
     else {
-        ui->labelCompasso->hide();
-        ui->treinarBox->hide();
-        ui->treinarButton->hide();
-        ui->treinarBox->hide();
-        ui->praticaLivreButton->hide();
+        ui->imbBox->hide();
+        ui->imbButton->hide();
+        ui->labelIBM->hide();
     }
 }
