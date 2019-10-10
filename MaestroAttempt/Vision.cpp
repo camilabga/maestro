@@ -1,10 +1,8 @@
 #include "Vision.h"
 
 
-
 void Vision::cvTackBarEvents(int pos, void*){
     (void)(pos);
-
 
     setParamsFromGlobalVariables();
 
@@ -196,9 +194,9 @@ void Vision::circleTracker(){
     GaussianBlur(TheInputImageCopy, frameBlur, Size(7,7), 0, 0);
     cvtColor(frameBlur, imageHSV, COLOR_BGR2HSV);
     // Green
-    inRange(imageHSV, Scalar(85, 0, 250), Scalar(95, 255, 255), mask);
+    //inRange(imageHSV, Scalar(85, 0, 250), Scalar(95, 255, 255), mask);
     // Pink
-    //inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
+    inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
 
     Mat element = getStructuringElement(MORPH_ELLIPSE, Size(5, 5), Point(-1,-1));
     erode(mask, mask, element);

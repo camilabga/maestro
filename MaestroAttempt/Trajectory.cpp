@@ -167,8 +167,9 @@ void Trajectory::savePoint(Point pos){
 }
 
 void Trajectory::setNextPoint0(Point pos){
+    // Change OR
     if((pos.x-points[current_point].x)*(pos.x-points[current_point].x)/(ELIPSE_X) + (pos.y-points[current_point].y)*(pos.y-points[current_point].y)/(ELIPSE_Y) <= 1
-            || (pos.x-points[current_point].x)*(pos.x-points[current_point].x) + (pos.y-points[current_point].y)*(pos.y-points[current_point].y) >
+            && (pos.x-points[current_point].x)*(pos.x-points[current_point].x) + (pos.y-points[current_point].y)*(pos.y-points[current_point].y) >
                             (pos.x-points[current_point+1].x)*(pos.x-points[current_point+1].x) + (pos.y-points[current_point+1].y)*(pos.y-points[current_point+1].y)){
         current_point++;
 

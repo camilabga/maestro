@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "Vision.h"
-//#include "Weareable.h"
+#include "Weareable.h"
 #include "Trajectory.h"
 #include <QTimer>
 #include <QFile>
@@ -19,6 +19,7 @@ using namespace cv;
 /*******************
     Main Window
 ********************/
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -31,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Timer = new QTimer(this);
     connect(Timer, SIGNAL(timeout()), this, SLOT(DisplayImage()));
 
-    // States Seting
+    // Seting States
     isMetrnonomeOn = false;
     isAudibleFeedbackOn = false;
     isTapOn = true;
@@ -41,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     weareableIsOn = true;
     espIP = (char*)"10.6.4.143";
 
-    /* Language Settings, starting as portuguese. */
+    // Language Settings, starting as portuguese.
     isPt = true;
     isEn = false;
     this->setPortuguese();
@@ -50,7 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->gravarMenuShow(false);
     this->salvarMenuShow(false);
     this->feedbackMenuShow(false);
+    this->IMBShow(false);
     newGesture = false;
+    ui->treinarBox->setEnabled(false);
 
     // Correção
     correction = false;
@@ -98,6 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -106,31 +110,30 @@ MainWindow::~MainWindow()
 /*********************************
        Especific Functions
 **********************************/
+
 void MainWindow::DisplayImage(){
 
     Point newValue;
 
-    ui->image->show();
+    ui->image->setEnabled(true);
 
- //   vision.calculateTagCenter();
     vision.circleTracker();
 
     if(newGesture){
         if (vision.isTargetOn()) {
             trajectory.savePoint(vision.getCenter());
-            //vision.saveVideo();
         }
         vision.saveVideo();
 
-    }else if(correction){
+    } else if(correction) {
         unsigned int currentPoint, beforePoint;
+        vision.saveVideo();
 
         vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
         beforePoint = trajectory.getCurrentPointId();
-
         if (vision.isTargetOn()) {
             // Descomentar para mudar os pontos
-            //trajectory.setNextPoint0(vision.getCenter());
+            trajectory.setNextPoint0(vision.getCenter());
 
             // Feedback de Tap (Click quando o ponto é trocado)
             currentPoint = trajectory.getCurrentPointId();
@@ -138,13 +141,11 @@ void MainWindow::DisplayImage(){
             if((currentPoint != beforePoint) && isTapOn) {
                 if(int(currentPoint) == midPoint || int(currentPoint) == 19)  proxEffect.play();
             }
-
             newValue = vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
 
             if (weareableIsOn) weareable.send(trajectory.getError(vision.getCenter()));
             if(gravarGesto) trajectory.savePoint(vision.getCenter());
         }
-
     }
 
     // Plays audible feedback
@@ -156,6 +157,7 @@ void MainWindow::DisplayImage(){
     QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
     ui->image->setPixmap(QPixmap::fromImage(imdisplay));
 }
+
 
 Point MainWindow::audioFeedbackHandler(Point correctionValue, Point newValue)
 {
@@ -182,6 +184,7 @@ Point MainWindow::audioFeedbackHandler(Point correctionValue, Point newValue)
 
     return newValue;
 }
+
 
 int MainWindow::distanceToHz(int distance, int steps)
 {
@@ -215,26 +218,17 @@ int MainWindow::distanceToHz(int distance, int steps)
     return y;
 }
 
-void MainWindow::salvarCSV()
-{
-    QMessageBox::information(this,"Aviso","informe o nome do arquivo csv a ser salvo");
-    fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
-    QFile file(fileName);
-    if(!file.open(QFile::WriteOnly |QFile::Truncate)){
-        QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
-    }else{
-        trajectory.saveMovement(fileName.toStdString());
-    }
-}
 
 void MainWindow::MetronomoSlot()
 {
     metronomoTick.play();
 }
 
+
 /*******************************************
         Metronome Action Functions
 ********************************************/
+
 void MainWindow::on_spinBox_valueChanged(int value)
 {
     metronomoValue = 60000/value;
@@ -242,6 +236,7 @@ void MainWindow::on_spinBox_valueChanged(int value)
     metronomoTick.stop();
     metronomoTimer->start(metronomoValue);
 }
+
 
 void MainWindow::on_startMetronomeButton_clicked()
 {
@@ -257,6 +252,7 @@ void MainWindow::on_startMetronomeButton_clicked()
     }
 }
 
+
 void MainWindow::on_metronomeVolumeSlider_valueChanged(int value)
 {
     qreal linearVolume = QAudio::convertVolume(value / qreal(100), QAudio::LogarithmicVolumeScale,
@@ -265,9 +261,11 @@ void MainWindow::on_metronomeVolumeSlider_valueChanged(int value)
     ui->labelMetronomeVolume->setText("Volume : " + QString::number(value));
 }
 
+
 /************************************************
         Audio Feedback Action Functions
 *************************************************/
+
 void MainWindow::on_volumeFeedbackSlider_valueChanged(int value)
 {
     qreal linearVolume = QAudio::convertVolume(value / qreal(100), QAudio::LogarithmicVolumeScale,
@@ -275,6 +273,7 @@ void MainWindow::on_volumeFeedbackSlider_valueChanged(int value)
     m_audioOutput->setVolume(linearVolume);
     ui->labelFeedbackVolume->setText("Volume : " + QString::number(value));
 }
+
 
 void MainWindow::on_playFeedbackButton_clicked()
 {
@@ -288,11 +287,13 @@ void MainWindow::on_playFeedbackButton_clicked()
     isAudibleFeedbackOn = !isAudibleFeedbackOn;
 }
 
+
 void MainWindow::on_tapButton_clicked()
 {
     if(!isTapOn) isTapOn = true;
     else isTapOn = false;
 }
+
 
 void MainWindow::on_pulsieraButton_clicked()
 {
@@ -306,61 +307,125 @@ void MainWindow::on_pulsieraButton_clicked()
     weareableIsOn = !weareableIsOn;
 }
 
+
 /************************************
         Menu Action Functions
 *************************************/
+
+bool MainWindow::salvarCSV()
+{
+    QMessageBox::StandardButton ret = QMessageBox::information(this,
+                                                               "Aviso",
+                                                               "Informe o nome do arquivo CSV a ser salvo",
+                                                               QMessageBox::Cancel | QMessageBox::Ok);
+    if (ret == QMessageBox::Ok){
+        fileName = QFileDialog::getSaveFileName(this,"Save as", "filename.csv", "CSV files (.csv);;Zip files (.zip, *.7z)", 0, 0);
+        QFile file(fileName);
+        if(!file.open(QFile::WriteOnly |QFile::Truncate)){
+            QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
+            return false;
+        }else{
+            trajectory.saveMovement(fileName.toStdString());
+            return true;
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+bool MainWindow::salvarVideo()
+{
+    QMessageBox::StandardButton ret = QMessageBox::information(this,
+                                                               "Aviso",
+                                                               "Informe o nome do arquivo '.avi' a ser salvo",
+                                                               QMessageBox::Cancel | QMessageBox::Ok);
+    if(ret == QMessageBox::Ok){
+        QString fileName1 = QFileDialog::getSaveFileName(this,"Save as", "Videos/filename.avi", "AVI files (.avi);", 0, 0);
+        QFile file1(fileName1);
+        if(!file1.open(QFile::WriteOnly |QFile::Truncate)){
+            QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
+            return false;
+        }
+        else {
+            vision.record(fileName1.toStdString());
+            return true;
+        }
+    }
+    else return false;
+}
+
 void MainWindow::on_praticaLivreButton_clicked()
 {   
-    salvarCSV();
-    QMessageBox::information(this,"Aviso","informe o nome do arquivo de video a ser salvo");
-    QString fileName1 = QFileDialog::getSaveFileName(this,"Save as", "Videos/filename.avi", "AVI files (.avi);", 0, 0);
-    QFile file1(fileName1);
-    if(!file1.open(QFile::WriteOnly |QFile::Truncate)){
-        QMessageBox::warning(this,"Aviso","Não foi possível salvar o arquivo...");
-    }else{
-        vision.record("Videos/"+fileName1.toStdString());
-        Timer->start(); //Will start the timer
-
-       this->praticarInterface();
+    if(salvarCSV()){
+        if(salvarVideo()){
+            isLivreOn = true;
+            isTreinarOn = false;
+            Timer->start(); //Will start the timer
+            this->praticarInterface();
+            selectEffect.play();
+        }
+        else return;
     }
-    isLivreOn = true;
-    isTreinarOn = false;
-    this->IMBShow(false);
-    selectEffect.play();
+    else return;
 }
 
+// Tratamento de erro
 void MainWindow::on_treinarButton_clicked()
 {
-    salvarCSV();
-    QMessageBox::information(this,"Aviso","informe o nome do arquivo csv a ser lido");
-    QString fileName = QFileDialog::getOpenFileName(this,"Save as", "gestos/", tr("CSV files (*.csv);;Zip files (*.zip, *.7z)"));
-    QFile file(fileName);
-    if(!file.open(QFile::ReadOnly)){
-        QMessageBox::warning(this,"Aviso","Não foi possível abrir o arquivo...");
-    }else{
-        trajectory.getPointsFromCSV2(fileName.toStdString());
-        trajectory.unnormalize2();
-        //trajectory.getPointsFromnCSV(fileName.toStdString());
-        //trajectory.unnormalize();
-        weareable.setIP(espIP);
-        weareable.start();
-        correction = true;
-        std::cerr<<"Trajetoria "<<trajectory.getSize();
-        Timer->start();
+    bool saveCSV = salvarCSV();
+    if (saveCSV){
+        QMessageBox::StandardButton ret = QMessageBox::information(this,
+                                                                   "Aviso",
+                                                                   "Informe o nome do arquivo CSV a ser lido",
+                                                                   QMessageBox::Cancel | QMessageBox::Ok);
+        if(ret == QMessageBox::Ok){
+            QString fileName = QFileDialog::getOpenFileName(this,"Save as", "gestos/", tr("CSV files (*.csv);;Zip files (*.zip, *.7z)"));
+            QFile file(fileName);
+            if(!file.open(QFile::ReadOnly)){
+                QMessageBox::warning(this,"Aviso","Não foi possível abrir o arquivo...");
+                return;
+            }
+            else {
+                bool saveVideo = salvarVideo();
+                if(saveVideo){
+                    trajectory.getPointsFromCSV2(fileName.toStdString());
+                    trajectory.unnormalize2();
+                    //trajectory.getPointsFromnCSV(fileName.toStdString());
+                    //trajectory.unnormalize();
 
-        this->treinarInterface();
-        isTreinarOn = true;
-        isLivreOn = false;
-        selectEffect.play();
-        this->IMBShow(false);
+                    weareable.setIP(espIP);
+                    weareable.start();
+
+                    correction = true;
+
+                    std::cerr<<"Trajetoria "<<trajectory.getSize();
+
+                    Timer->start();
+
+                    this->IMBShow(false);
+                    this->treinarInterface();
+                    isTreinarOn = true;
+                    isLivreOn = false;
+                    selectEffect.play();
+                }
+                else return;
+            }
+        }
+        else return;
     }
+    else return;
 }
+
 
 void MainWindow::on_stopBt_clicked()
 {
     Timer->stop(); //Will stop the timer
     trajectory.endSaving();
-    ui->image->hide();
+
+    ui->image->clear();
+    ui->image->setEnabled(false);
+
     QBrush tb(Qt::transparent);
     this->salvarMenuShow(true);
     this->gravarMenuShow(false);
@@ -368,14 +433,17 @@ void MainWindow::on_stopBt_clicked()
     if(isTreinarOn) isTreinarOn = false;
     if(isLivreOn) isLivreOn = false;
     gravarGesto=false;
+    newGesture=false;
 }
+
 
 void MainWindow::on_startBt_clicked()
 {
-    ui->startBt->hide();
+    ui->startBt->setEnabled(false);
     if(!isTreinarOn) newGesture = true;
     gravarGesto=true;
 }
+
 
 void MainWindow::on_vizualizarButton_clicked()
 {
@@ -389,16 +457,20 @@ void MainWindow::on_vizualizarButton_clicked()
     }
 }
 
+
 void MainWindow::on_salvarButton_clicked()
 {
-    vision.endRecording();
-    QMessageBox::question(this,"Aviso","Video salvo!");
-    ui->salvarButton->hide();
+//    vision.release();
+//    vision.endRecording();
+    QMessageBox::warning(this,"Aviso","Video salvo!");
+    ui->salvarButton->setEnabled(false);
 }
+
 
 /************************************
         Language Functions
 *************************************/
+
 void MainWindow::setPortuguese()
 {
     // Buttons
@@ -422,6 +494,7 @@ void MainWindow::setPortuguese()
     ui->treinarBox->setItemText(1, "Ternário");
     ui->treinarBox->setItemText(2, "Quaternário");
 }
+
 
 void MainWindow::setEnglish()
 {
@@ -447,6 +520,7 @@ void MainWindow::setEnglish()
     ui->treinarBox->setItemText(2, "Quaternary");
 }
 
+
 void MainWindow::on_languageButton_clicked()
 {
     if(isPt){
@@ -461,9 +535,11 @@ void MainWindow::on_languageButton_clicked()
     }
 }
 
+
 /************************************
         Hide-Show Functions
 *************************************/
+
 void MainWindow::praticarInterface()
 {
     // Sets the interface for the Free Practice situation
@@ -473,90 +549,57 @@ void MainWindow::praticarInterface()
     this->treinarShow(false);
 }
 
+
 void MainWindow::treinarInterface()
 {
+    this->treinarShow(false);
     this->gravarMenuShow(true);
     this->feedbackMenuShow(true);
     this->salvarMenuShow(false);
-    ui->praticaLivreButton->hide();
 }
+
 
 void MainWindow::salvarMenuShow(bool enable)
 {
-    if (enable){
-        ui->salvarButton->show();
-        ui->vizualizarButton->show();
-    }
-    else{
-        ui->salvarButton->hide();
-        ui->vizualizarButton->hide();
-    }
+
+    ui->salvarButton->setEnabled(enable);
+    ui->salvarButton->setEnabled(enable);
+    ui->vizualizarButton->setEnabled(enable);
+
 }
+
 
 void MainWindow::feedbackMenuShow(bool enable)
 {
-    if (enable){
-        // Show Audio Feedback interface
-        ui->labelPulsiera->show();
-        ui->pulsieraButton->show();
-        ui->labelAudioFeedback->show();
-        ui->playFeedbackButton->show();
-        ui->volumeFeedbackSlider->show();
-        ui->labelFeedbackVolume->show();
-        ui->tapButton->show();
-    }
-    else{
-        // Hide Audio Feedback interface
-        ui->labelPulsiera->hide();
-        ui->pulsieraButton->hide();
-        ui->labelAudioFeedback->hide();
-        ui->playFeedbackButton->hide();
-        ui->volumeFeedbackSlider->hide();
-        ui->labelFeedbackVolume->hide();
-        ui->tapButton->hide();
-    }
+    ui->labelPulsiera->setEnabled(enable);
+    ui->labelAudioFeedback->setEnabled(enable);
+    ui->pulsieraButton->setEnabled(enable);
+    ui->playFeedbackButton->setEnabled(enable);
+    ui->volumeFeedbackSlider->setEnabled(enable);
+    ui->labelFeedbackVolume->setEnabled(enable);
+    ui->tapButton->setEnabled(enable);
 }
+
 
 void MainWindow::gravarMenuShow(bool enable)
 {
-    if (enable){
-        ui->startBt->show();
-        ui->stopBt->show();
-    }
-    else {
-        ui->startBt->hide();
-        ui->stopBt->hide();
-    }
+    ui->startBt->setEnabled(enable);
+    ui->stopBt->setEnabled(enable);
 }
 
+// Box disabled while not implemented
 void MainWindow::treinarShow(bool enable)
-{
-    if(enable){
-        ui->labelCompasso->show();
-        ui->treinarBox->show();
-        ui->treinarButton->show();
-        ui->treinarBox->show();
-        ui->praticaLivreButton->show();
-    }
-    else {
-        ui->labelCompasso->hide();
-        ui->treinarBox->hide();
-        ui->treinarButton->hide();
-        ui->treinarBox->hide();
-        ui->praticaLivreButton->hide();
-    }
+{    
+    ui->labelCompasso->setEnabled(enable);
+    ui->treinarBox->setEnabled(false);
+    ui->treinarButton->setEnabled(enable);
+    ui->praticaLivreButton->setEnabled(enable);
 }
+
 
 void MainWindow::IMBShow(bool enable)
 {
-    if(enable){
-        ui->imbBox->show();
-        ui->imbButton->show();
-        ui->labelIBM->show();
-    }
-    else {
-        ui->imbBox->hide();
-        ui->imbButton->hide();
-        ui->labelIBM->hide();
-    }
+    ui->imbBox->setEnabled(enable);
+    ui->imbButton->setEnabled(enable);
+    ui->labelIBM->setEnabled(enable);
 }

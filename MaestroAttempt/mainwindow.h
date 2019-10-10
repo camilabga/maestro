@@ -46,7 +46,9 @@ private slots:
 
     int distanceToHz(int distance, int steps);
 
-    void salvarCSV();
+    bool salvarCSV();
+
+    bool salvarVideo();
 
     void praticarInterface();
 
