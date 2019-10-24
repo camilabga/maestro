@@ -44,6 +44,17 @@ class Trajectory{
         ~Trajectory();
         Trajectory(string file);
 
+        inline void flush(){
+            x.clear();
+            y.clear();
+            points.clear();
+            vel.clear();
+            min.clear();
+            delta.clear();
+            velx.clear();
+            vely.clear();
+        }
+
         void getPointsFromCSV(string file);
         inline const Point getPoint(int index){return points[index];}
         inline const int getSize(){return points.size();}

@@ -39,8 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     isTreinarOn = false;
     isLivreOn = false;
     gravarGesto = false;
-    weareableIsOn = true;
+    weareableIsOn = false;
     espIP = (char*)"10.6.4.143";
+    myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/binarioOrdenado.csv";
 
     // Language Settings, starting as portuguese.
     isPt = true;
@@ -98,8 +99,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     startEffect.play();
 
-    // Resets the image for new trajectory drawing
-    connect(ui->treinarBox, SIGNAL(currentIndexChanged(int)), this, SLOT(resetImage()));
+    // Sets inicial frame
+    Mat img = imread("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/pics/Webp.net-resizeimage.png", CV_LOAD_IMAGE_COLOR);
+    cv::cvtColor(img,img,CV_BGR2RGB);
+    QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
+    ui->image->setPixmap(QPixmap::fromImage(imdisplay));
+
 }
 
 
@@ -158,16 +163,6 @@ void MainWindow::DisplayImage(){
     cv::cvtColor(img,img,CV_BGR2RGB);
     QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
     ui->image->setPixmap(QPixmap::fromImage(imdisplay));
-}
-
-
-void MainWindow::resetImage(){
-
-    Mat img = vision.resetImage();
-    cv::cvtColor(img,img,CV_BGR2RGB);
-    QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
-    ui->image->setPixmap(QPixmap::fromImage(imdisplay));
-
 }
 
 
@@ -311,10 +306,11 @@ void MainWindow::on_pulsieraButton_clicked()
 {
     if(weareableIsOn){
         weareable.setIP((char*)"0.0.0.000");
-         QMessageBox::warning(this,"Aviso","Pulseira Desativada");
+        QMessageBox::warning(this,"Aviso","Pulseira Desativada");
     } else {
         weareable.setIP(espIP);
-         QMessageBox::warning(this,"Aviso","Pulseira Ativada");
+        QMessageBox::warning(this,"Aviso","Pulseira Ativada");
+        weareable.start();
     }
     weareableIsOn = !weareableIsOn;
 }
@@ -385,46 +381,58 @@ void MainWindow::on_praticaLivreButton_clicked()
 }
 
 
+void MainWindow::on_treinarBox_currentIndexChanged(int index)
+{
+    trajectory.flush();
+    switch (index) {
+        case 0:
+            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/binarioOrdenado.csv";
+            break;
+        case 1:
+            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/ternarioOrdenado.csv";
+            break;
+        case 2:
+            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/quaternario.csv";
+            break;
+        default:
+            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/binarioOrdenado.csv";
+            break;
+    }
+
+}
+
+
 void MainWindow::on_treinarButton_clicked()
 {
     bool saveCSV = salvarCSV();
     if (saveCSV){
-        QMessageBox::StandardButton ret = QMessageBox::information(this,
-                                                                   "Aviso",
-                                                                   "Informe o nome do arquivo CSV a ser lido",
-                                                                   QMessageBox::Cancel | QMessageBox::Ok);
-        if(ret == QMessageBox::Ok){
-            QString fileName = QFileDialog::getOpenFileName(this,"Save as", "gestos/", tr("CSV files (*.csv);;Zip files (*.zip, *.7z)"));
+        bool saveVideo = salvarVideo();
+        if(saveVideo){
+            // Carrega trajetória
+            QString fileName = myFileName;
             QFile file(fileName);
             if(!file.open(QFile::ReadOnly)){
                 QMessageBox::warning(this,"Aviso","Não foi possível abrir o arquivo...");
                 return;
             }
-            else {
-                bool saveVideo = salvarVideo();
-                if(saveVideo){
-                    trajectory.getPointsFromCSV2(fileName.toStdString());
-                    trajectory.unnormalize2();
-                    //trajectory.getPointsFromnCSV(fileName.toStdString());
-                    //trajectory.unnormalize();
+            trajectory.getPointsFromCSV2(fileName.toStdString());
+            trajectory.unnormalize2();
+            //trajectory.getPointsFromnCSV(fileName.toStdString());
+            //trajectory.unnormalize();
 
-                    weareable.setIP(espIP);
-                    weareable.start();
+            // Pulseira iniciada ao clicar o botão referente a pulseira
 
-                    correction = true;
+            correction = true;
 
-                    std::cerr<<"Trajetoria "<<trajectory.getSize();
+            //std::cerr<<"Trajetoria "<<trajectory.getSize();
 
-                    Timer->start();
+            Timer->start();
 
-                    this->IMBShow(false);
-                    this->treinarInterface();
-                    isTreinarOn = true;
-                    isLivreOn = false;
-                    selectEffect.play();
-                }
-                else return;
-            }
+            this->IMBShow(false);
+            this->treinarInterface();
+            isTreinarOn = true;
+            isLivreOn = false;
+            selectEffect.play();
         }
         else return;
     }
@@ -496,17 +504,21 @@ void MainWindow::setPortuguese()
     ui->treinarButton->setText("Treinar Compasso");
     ui->praticaLivreButton->setText("Treino Livre");
     ui->vizualizarButton->setText("Gerar Gráfico");
+    ui->imbButton->setText("Treinar IMB");
     // Labels
     ui->labelMetronome->setText("Metrônomo");
     ui->labelAudioFeedback->setText("Retorno Auditivo");
     ui->labelPulsiera->setText("Retorno Tátil");
     ui->labelCompasso->setText("Seleção de Padrões de Marcação de Compasso");
+    ui->labelIBM->setText("Independência Motora dos Braços");
     // Menu
     ui->actionSair->setText("Sair");
     // Combo Box
     ui->treinarBox->setItemText(0, "Binário");
     ui->treinarBox->setItemText(1, "Ternário");
     ui->treinarBox->setItemText(2, "Quaternário");
+    ui->imbBox->setItemText(0, "Quadrado");
+    ui->imbBox->setItemText(1, "Círculo");
 }
 
 
@@ -521,17 +533,21 @@ void MainWindow::setEnglish()
     ui->treinarButton->setText("Practice Compass");
     ui->praticaLivreButton->setText("Free Practice");
     ui->vizualizarButton->setText("Plot Graph");
+    ui->imbButton->setText("Practice IMB");
     // Labels
     ui->labelMetronome->setText("Metrnome");
     ui->labelAudioFeedback->setText("Audible Feedback");
     ui->labelPulsiera->setText("Tactile Feedback");
     ui->labelCompasso->setText("Select Compass Markers Patterns");
+        ui->labelIBM->setText("Arms' Locomotorial Independence");
     // Menu
     ui->actionSair->setText("Quit");
     // Combo Box
     ui->treinarBox->setItemText(0, "Binary");
     ui->treinarBox->setItemText(1, "Ternary");
     ui->treinarBox->setItemText(2, "Quaternary");
+    ui->imbBox->setItemText(0, "Square");
+    ui->imbBox->setItemText(1, "Circle");
 }
 
 
@@ -616,10 +632,4 @@ void MainWindow::IMBShow(bool enable)
     ui->imbBox->setEnabled(enable);
     ui->imbButton->setEnabled(enable);
     ui->labelIBM->setEnabled(enable);
-}
-
-
-void MainWindow::on_treinarBox_currentIndexChanged(int index)
-{
-
 }

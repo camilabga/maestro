@@ -29,8 +29,6 @@ class MainWindow : public QMainWindow
 public slots:    // A slot or function is defined which will be intiated by timer
     void DisplayImage();
 
-    void resetImage();
-
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -114,6 +112,8 @@ private:
          weareableIsOn;
 
     char* espIP;
+
+    QString myFileName;
 
     int toneSampleRateHz;
     const int durationSeconds = 1;

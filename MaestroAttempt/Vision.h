@@ -124,10 +124,12 @@ public:
         return TheInputImageCopy;
     }
 
-    inline Mat resetImage() {
-        TheInputImageCopy = TheInputImage;
-        return  TheInputImageCopy;
+    inline void resetImage() {
+        TheVideoCapturer.retrieve(TheInputImage);
+        TheInputImage=resizeImage(TheInputImage,resizeFactor);
+        TheInputImage.copyTo(TheInputImageCopy);
     }
+
     inline void release() { TheVideoCapturer.release(); }
     void record(string filename);
     void endRecording(){video.release();}
