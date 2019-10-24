@@ -53,7 +53,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->feedbackMenuShow(false);
     this->IMBShow(false);
     newGesture = false;
-    ui->treinarBox->setEnabled(false);
 
     // Correção
     correction = false;
@@ -87,18 +86,20 @@ MainWindow::MainWindow(QWidget *parent) :
     m_generator.reset(new Generator(format, durationSeconds * 1000000, toneSampleRateHz));
     m_audioOutput.reset(new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice(), format));
     m_generator->start();
-    m_audioOutput->setVolume(0.15f);
+    m_audioOutput->setVolume(0.0f);
 
     // Metronomo
     metronomoValue = 60000/40;
     /*-------------------------------------> Mudar caminho para "/YOUR_PATH/maestro/MaestroAttempt/audioFiles/metronome_click.wav" <------*/
     metronomoTick.setSource(QUrl::fromLocalFile("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/metronome_click.wav"));
-    metronomoTick.setVolume(0.25f);
+    metronomoTick.setVolume(0.0f);
     metronomoTimer = new QTimer(this);
     connect(metronomoTimer, SIGNAL(timeout()), this, SLOT(MetronomoSlot()));
 
     startEffect.play();
 
+    // Resets the image for new trajectory drawing
+    connect(ui->treinarBox, SIGNAL(currentIndexChanged(int)), this, SLOT(resetImage()));
 }
 
 
@@ -128,12 +129,13 @@ void MainWindow::DisplayImage(){
     } else if(correction) {
         unsigned int currentPoint, beforePoint;
         vision.saveVideo();
-
-        vision.drawTrajectory(trajectory, trajectory.getCurrentPointId());
+        int pointId = (trajectory.getSize() == trajectory.getCurrentPointId() + 1
+                       ? 0 : trajectory.getCurrentPointId() + 1);
+        vision.drawTrajectory(trajectory, pointId);
         beforePoint = trajectory.getCurrentPointId();
         if (vision.isTargetOn()) {
             // Descomentar para mudar os pontos
-            trajectory.setNextPoint0(vision.getCenter());
+            trajectory.setNextPoint0(vision.getCenter(), 1);
 
             // Feedback de Tap (Click quando o ponto é trocado)
             currentPoint = trajectory.getCurrentPointId();
@@ -141,7 +143,7 @@ void MainWindow::DisplayImage(){
             if((currentPoint != beforePoint) && isTapOn) {
                 if(int(currentPoint) == midPoint || int(currentPoint) == 19)  proxEffect.play();
             }
-            newValue = vision.drawError(vision.getCenter(), trajectory.getCurrentPoint());
+            newValue = vision.drawError(vision.getCenter(), trajectory.getPoint(pointId));
 
             if (weareableIsOn) weareable.send(trajectory.getError(vision.getCenter()));
             if(gravarGesto) trajectory.savePoint(vision.getCenter());
@@ -156,6 +158,16 @@ void MainWindow::DisplayImage(){
     cv::cvtColor(img,img,CV_BGR2RGB);
     QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
     ui->image->setPixmap(QPixmap::fromImage(imdisplay));
+}
+
+
+void MainWindow::resetImage(){
+
+    Mat img = vision.resetImage();
+    cv::cvtColor(img,img,CV_BGR2RGB);
+    QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
+    ui->image->setPixmap(QPixmap::fromImage(imdisplay));
+
 }
 
 
@@ -334,6 +346,7 @@ bool MainWindow::salvarCSV()
     }
 }
 
+
 bool MainWindow::salvarVideo()
 {
     QMessageBox::StandardButton ret = QMessageBox::information(this,
@@ -355,6 +368,7 @@ bool MainWindow::salvarVideo()
     else return false;
 }
 
+
 void MainWindow::on_praticaLivreButton_clicked()
 {   
     if(salvarCSV()){
@@ -370,7 +384,7 @@ void MainWindow::on_praticaLivreButton_clicked()
     else return;
 }
 
-// Tratamento de erro
+
 void MainWindow::on_treinarButton_clicked()
 {
     bool saveCSV = salvarCSV();
@@ -587,11 +601,11 @@ void MainWindow::gravarMenuShow(bool enable)
     ui->stopBt->setEnabled(enable);
 }
 
-// Box disabled while not implemented
+
 void MainWindow::treinarShow(bool enable)
 {    
     ui->labelCompasso->setEnabled(enable);
-    ui->treinarBox->setEnabled(false);
+    ui->treinarBox->setEnabled(enable);
     ui->treinarButton->setEnabled(enable);
     ui->praticaLivreButton->setEnabled(enable);
 }
@@ -602,4 +616,10 @@ void MainWindow::IMBShow(bool enable)
     ui->imbBox->setEnabled(enable);
     ui->imbButton->setEnabled(enable);
     ui->labelIBM->setEnabled(enable);
+}
+
+
+void MainWindow::on_treinarBox_currentIndexChanged(int index)
+{
+
 }

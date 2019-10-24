@@ -65,7 +65,7 @@ class Trajectory{
 
         char* getError(Point pos);
 
-        void setNextPoint0(Point pos);
+        void setNextPoint0(Point pos, int sens);
         void setNextPoint1(Point pos);
         inline unsigned int getCurrentPointId(){return current_point;}
         inline Point getCurrentPoint(){return points[current_point];}

@@ -16,7 +16,7 @@ void Weareable::start(){
 
     if (bind(fd, (struct sockaddr *)&myaddr, sizeof(myaddr)) < 0) {
         cout<<"bind failed"<<endl;
-        exit(1);
+        //exit(1);
     }
 
     memset((char *) &remaddr, 0, sizeof(remaddr));
@@ -24,7 +24,7 @@ void Weareable::start(){
     remaddr.sin_port = htons(SERVICE_PORT);
     if (inet_aton(ip_esp, &remaddr.sin_addr)==0) {
         cout<<"inet_aton() failed\n";
-        exit(1);
+        //exit(1);
     }
 }
 

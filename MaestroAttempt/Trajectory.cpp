@@ -29,6 +29,10 @@ void Trajectory::getPointsFromCSV(string file){
     //char temp1[10], temp2[10];
     x.clear();
     y.clear();
+    min.clear();
+    delta.clear();
+    velx.clear();
+    vely.clear();
 
     if (myfile.is_open()){
         while (myfile.good()) {
@@ -57,6 +61,10 @@ void Trajectory::getPointsFromCSV2(string file){
     //char temp1[10], temp2[10];
     x.clear();
     y.clear();
+    min.clear();
+    delta.clear();
+    velx.clear();
+    vely.clear();
 
     myfile.ignore(numeric_limits<streamsize>::max(), '[');
     myfile>>temp;
@@ -166,17 +174,20 @@ void Trajectory::savePoint(Point pos){
     save_points.flush();
 }
 
-void Trajectory::setNextPoint0(Point pos){
+void Trajectory::setNextPoint0(Point pos, int sens){
     // Change OR
-    if((pos.x-points[current_point].x)*(pos.x-points[current_point].x)/(ELIPSE_X) + (pos.y-points[current_point].y)*(pos.y-points[current_point].y)/(ELIPSE_Y) <= 1
-            && (pos.x-points[current_point].x)*(pos.x-points[current_point].x) + (pos.y-points[current_point].y)*(pos.y-points[current_point].y) >
-                            (pos.x-points[current_point+1].x)*(pos.x-points[current_point+1].x) + (pos.y-points[current_point+1].y)*(pos.y-points[current_point+1].y)){
-        current_point++;
-
-        if (points.size() == current_point) {
-            current_point = 0;
-        }
+    unsigned int oldId = current_point;
+    unsigned int newId = (points.size()-1 == oldId ? 0 : oldId+1);
+    double pointElipseX = (pos.x-points[oldId].x)*(pos.x-points[oldId].x)/(ELIPSE_X);
+    double pointElipseY = (pos.y-points[newId].y)*(pos.y-points[newId].y)/(ELIPSE_Y);
+    double thisPointDist = (pos.x-points[oldId].x)*(pos.x-points[oldId].x) + (pos.y-points[oldId].y)*(pos.y-points[oldId].y);
+    double nextPointDist = (pos.x-points[newId].x)*(pos.x-points[newId].x) + (pos.y-points[newId].y)*(pos.y-points[newId].y);
+    if(pointElipseX + pointElipseY <= sens && thisPointDist > nextPointDist){
+        current_point = newId;
     }
+//    cerr << "1st: " << (pointElipseX + pointElipseY) <<
+//            "  2nd: " << (thisPointDist > nextPointDist)
+//         << endl;
 }
 
 void Trajectory::setNextPoint1(Point pos){

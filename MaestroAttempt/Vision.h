@@ -123,6 +123,11 @@ public:
         flip(TheInputImageCopy, TheInputImageCopy, 1);
         return TheInputImageCopy;
     }
+
+    inline Mat resetImage() {
+        TheInputImageCopy = TheInputImage;
+        return  TheInputImageCopy;
+    }
     inline void release() { TheVideoCapturer.release(); }
     void record(string filename);
     void endRecording(){video.release();}

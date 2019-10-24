@@ -101,7 +101,7 @@
      <item>
       <widget class="QLabel" name="labelMetronomeVolume">
        <property name="text">
-        <string>Volume</string>
+        <string>Volume : 0</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -193,7 +193,7 @@
      <item>
       <widget class="QLabel" name="labelFeedbackVolume">
        <property name="text">
-        <string>Volume</string>
+        <string>Volume : 0</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignHCenter|Qt::AlignTop</set>

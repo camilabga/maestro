@@ -29,6 +29,8 @@ class MainWindow : public QMainWindow
 public slots:    // A slot or function is defined which will be intiated by timer
     void DisplayImage();
 
+    void resetImage();
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -99,6 +101,8 @@ private slots:
     void on_salvarButton_clicked();
 
     void on_pulsieraButton_clicked();
+
+    void on_treinarBox_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
