@@ -2,8 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>  //Biblioteca do UDP.
 
-const char *ssid = "luladrao";
-const char *password = "ronaldopele";
+const char *ssid = "LAR";
+const char *password = "LAR@1480";
 //const char *ssid = "LAR-ECT";
 //const char *password = "larfacil1234";
 
@@ -11,7 +11,7 @@ const int delta = 1023;
 
 // IPAddress ip(192,168,0,43);     //ESP do Motor Shield
 // IPAddress ip(192, 168, 0, 57); //Seu ESP
-IPAddress ip(192, 168, 0, 18);  // Novo ESP
+IPAddress ip(10,6,4,124);  // Novo ESP
 
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
@@ -30,18 +30,18 @@ int BAIXO = 13;
 int ESQ = 12;
 /*
 
-/*
-//EspUDP
-int DIR = 12;
-int CIMA = 13;
-int BAIXO = 5;
-int ESQ = 15;
+  /*
+  //EspUDP
+  int DIR = 12;
+  int CIMA = 13;
+  int BAIXO = 5;
+  int ESQ = 15;
 
-ESPHTTP
-int CIMA = 4;
-int ESQ = 5;
-int BAIXO  = 16;
-int DIR = 0;
+  ESPHTTP
+  int CIMA = 4;
+  int ESQ = 5;
+  int BAIXO  = 16;
+  int DIR = 0;
 
 */
 
@@ -143,10 +143,10 @@ void loop() {
     val2 = 0.0;
 
     // Serial.print("Recebi o comando, ligarei por 200ms  ");
-//    Serial.print("Chegou: ");
-    // Serial.println(req.substring(slash, req.length()));
-//    Serial.println(req);
-    int temp = req.indexOf(',');
+    //Serial.print("Chegou: ");
+    //Serial.println(req);
+    //Serial.println(req);
+    int temp = req.indexOf(';');
     val1 = req.substring(0, temp).toFloat();  // Seleciona parte do primeiro PMW
 
     val2 = req.substring(temp + 1, req.length()).toFloat();
@@ -154,50 +154,63 @@ void loop() {
     val1 *= delta;
     val2 *= delta;
 
-//    Serial.println("CIMA\tDIR\t");
-//    Serial.print("\t");
-//    Serial.print(val1);
-//    Serial.print("\t");
-//    Serial.println(val2);
+    //Serial.println("CIMA\tDIR\t");
+    
+    //Serial.print(val1);
+    //Serial.print("\t");
+    //Serial.println(val2);
 
     /*
-    Pino 5 ---> CIMA
-    Pino 4 ---> BAIXO
-    Pino 16 ---> ESQ
-    Pino 0 ---> DIREITA
+      Pino 5 ---> CIMA
+      Pino 4 ---> BAIXO
+      Pino 16 ---> ESQ
+      Pino 0 ---> DIREITA
 
     */
 
     //analogWrite(val2 > 0 ? BAIXO : CIMA, 50 + abs(val2));
-    if(val2 > 0){
-        analogWrite(BAIXO, abs(val2)-150 < 0 ? 0 : abs(val2)-150);
-        analogWrite(CIMA,0);
-        Serial.print("Escrevendo:");
-        Serial.print(abs(val2)-150 < 0 ? 0 : abs(val2)-150);
-        Serial.println("    no motor de BAIXO");
-    }else{
-        analogWrite(CIMA,abs(val2)-150 < 0 ? 0 : abs(val2)-150);
-        analogWrite(BAIXO,0);
+    if (val2 > 0) {
+      analogWrite(BAIXO, abs(val2) - 150 < 0 ? 0 : abs(val2) - 150);
+      analogWrite(CIMA, 0);
+      Serial.print("BAIXO:");
+      Serial.print(abs(val2) - 150 < 0 ? 0 : abs(val2) - 150);
+      Serial.print('\t');
+      
+      ///Serial.print("Escrevendo:");
+      //Serial.print(abs(val2) - 150 < 0 ? 0 : abs(val2) - 150);
+      //Serial.println("    no motor de BAIXO");
+    } else {
+      analogWrite(CIMA, abs(val2) - 150 < 0 ? 0 : abs(val2) - 150);
+      analogWrite(BAIXO, 0);
+      Serial.print("CIMA:");
+      Serial.print(abs(val2) - 150 < 0 ? 0 : abs(val2) - 150);
+      Serial.print('\t');
 
-        Serial.print("Escrevendo:");
-        Serial.print(abs(val2)-150 < 0 ? 0 : abs(val2)-150);
-        Serial.println("    no motor de CIMA");
+      //Serial.print("Escrevendo:");
+      //Serial.print(abs(val2) - 150 < 0 ? 0 : abs(val2) - 150);
+      //Serial.println("    no motor de CIMA");
     }
-    
+
     //analogWrite(val1 > 0 ? ESQ : DIR, 50 + abs(val1));
 
-    if(val1 > 0){
-        analogWrite(ESQ, abs(val1)-150 < 0 ? 0 : abs(val1)-150);
-        analogWrite(DIR,0);
-        Serial.print("Escrevendo:");
-        Serial.print(abs(val1)-150 < 0 ? 0 : abs(val1)-150);
-        Serial.println("    no motor de ESQ");
-    }else{
-        analogWrite(DIR,abs(val1)-150 < 0 ? 0 : abs(val1)-150);
-        analogWrite(ESQ,0);
-        Serial.print("Escrevendo:");
-        Serial.print(abs(val1)-150 < 0 ? 0 : abs(val1)-150);
-        Serial.println("    no motor de DIR");
+    if (val1 > 0) {
+      analogWrite(ESQ, abs(val1) - 150 < 0 ? 0 : abs(val1) - 150);
+      analogWrite(DIR, 0);
+      Serial.print("DIR:");
+      Serial.print(abs(val1) - 150 < 0 ? 0 : abs(val1) - 150);
+      Serial.println('\t');
+      //Serial.print("Escrevendo:");
+      //Serial.print(abs(val1) - 150 < 0 ? 0 : abs(val1) - 150);
+      //Serial.println("    no motor de ESQ");
+    } else {
+      analogWrite(DIR, abs(val1) - 150 < 0 ? 0 : abs(val1) - 150);
+      analogWrite(ESQ, 0);
+      Serial.print("ESQ:");
+      Serial.print(abs(val1) - 150 < 0 ? 0 : abs(val1) - 150);
+      Serial.println('\t');
+      //Serial.print("Escrevendo:");
+      //Serial.print(abs(val1) - 150 < 0 ? 0 : abs(val1) - 150);
+      //Serial.println("    no motor de DIR");
     }
   }
   if (millis() - previus > 500) {
