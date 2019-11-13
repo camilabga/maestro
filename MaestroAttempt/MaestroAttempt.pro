@@ -37,14 +37,16 @@ SOURCES += \
         mainwindow.cpp \
     Vision.cpp \
     Trajectory.cpp \
-    Weareable.cpp
+    Weareable.cpp \
+    mousehover.cpp
 
 HEADERS += \
     generator.h \
         mainwindow.h \
     Vision.h \
     Trajectory.h \
-    Weareable.h
+    Weareable.h \
+    mousehover.h
 
 FORMS += \
         mainwindow.ui

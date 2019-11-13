@@ -28,11 +28,46 @@ MainWindow::MainWindow(QWidget *parent) :
     selectEffect(this),
     metronomoTick(this)
 {
+    player = new QMediaPlayer(this);
+    // Screen Reader
     ui->setupUi(this);
+    MouseHover *mouseHover = new MouseHover(player, ui);
+
+    //Buttons
+    ui->stopBt->installEventFilter(mouseHover);
+    ui->startBt->installEventFilter(mouseHover);
+    ui->praticaLivreButton->installEventFilter(mouseHover);
+    ui->vizualizarButton->installEventFilter(mouseHover);
+    ui->salvarButton->installEventFilter(mouseHover);
+    ui->imbButton->installEventFilter(mouseHover);
+    ui->treinarButton->installEventFilter(mouseHover);
+    ui->pulsieraButton->installEventFilter(mouseHover);
+    ui->playFeedbackButton->installEventFilter(mouseHover);
+    ui->startMetronomeButton->installEventFilter(mouseHover);
+    ui->tapButton->installEventFilter(mouseHover);
+    ui->languageButton->installEventFilter(mouseHover);
+
+    //Boxes
+    ui->imbBox->installEventFilter(mouseHover);
+    ui->treinarBox->installEventFilter(mouseHover);
+    ui->spinBox->installEventFilter(mouseHover);
+
+    // Sliders
+    ui->volumeFeedbackSlider->installEventFilter(mouseHover);
+    ui->metronomeVolumeSlider->installEventFilter(mouseHover);
+
+    //Labels
+    ui->labelCompasso->installEventFilter(mouseHover);
+    ui->labelIBM->installEventFilter(mouseHover);
+    ui->labelPulsiera->installEventFilter(mouseHover);
+    ui->actionSair->installEventFilter(mouseHover);
+
+
     Timer = new QTimer(this);
     connect(Timer, SIGNAL(timeout()), this, SLOT(DisplayImage()));
 
     // Seting States
+    ui->languageButton->setEnabled(false);
     isMetrnonomeOn = false;
     isAudibleFeedbackOn = false;
     isTapOn = true;
@@ -40,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     isLivreOn = false;
     gravarGesto = false;
     weareableIsOn = false;
-    espIP = (char*)"10.6.4.143";
+    espIP = (char*)"10.6.4.113";
     myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/binarioOrdenado.csv";
 
     // Language Settings, starting as portuguese.
@@ -269,9 +304,9 @@ void MainWindow::on_metronomeVolumeSlider_valueChanged(int value)
 }
 
 
-/************************************************
-        Audio Feedback Action Functions
-*************************************************/
+/*******************************************
+        Feedback Action Functions
+********************************************/
 
 void MainWindow::on_volumeFeedbackSlider_valueChanged(int value)
 {
@@ -304,11 +339,18 @@ void MainWindow::on_tapButton_clicked()
 
 void MainWindow::on_pulsieraButton_clicked()
 {
+    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
     if(weareableIsOn){
         weareable.setIP((char*)"0.0.0.000");
+        QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+        player->setMedia(QUrl::fromLocalFile(path + "pulseiraDesativada.wav"));
+        player->play();
         QMessageBox::warning(this,"Aviso","Pulseira Desativada");
     } else {
         weareable.setIP(espIP);
+        QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+        player->setMedia(QUrl::fromLocalFile(path + "pulseiraAtivada.wav"));
+        player->play();
         QMessageBox::warning(this,"Aviso","Pulseira Ativada");
         weareable.start();
     }
@@ -322,6 +364,9 @@ void MainWindow::on_pulsieraButton_clicked()
 
 bool MainWindow::salvarCSV()
 {
+    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+    player->setMedia(QUrl::fromLocalFile(path + "arqCSV.wav"));
+    player->play();
     QMessageBox::StandardButton ret = QMessageBox::information(this,
                                                                "Aviso",
                                                                "Informe o nome do arquivo CSV a ser salvo",
@@ -345,6 +390,9 @@ bool MainWindow::salvarCSV()
 
 bool MainWindow::salvarVideo()
 {
+    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+    player->setMedia(QUrl::fromLocalFile(path + "arqAVI.wav"));
+    player->play();
     QMessageBox::StandardButton ret = QMessageBox::information(this,
                                                                "Aviso",
                                                                "Informe o nome do arquivo '.avi' a ser salvo",
@@ -384,18 +432,28 @@ void MainWindow::on_praticaLivreButton_clicked()
 void MainWindow::on_treinarBox_currentIndexChanged(int index)
 {
     trajectory.flush();
+    QString fileCSV = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/";
+    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
     switch (index) {
         case 0:
-            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/binarioOrdenado.csv";
+            myFileName = fileCSV + "binarioOrdenado.csv";
+            player->setMedia(QUrl::fromLocalFile(path + "binario.wav"));
+            player->play();
             break;
         case 1:
-            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/ternarioOrdenado.csv";
+            myFileName = fileCSV + "ternarioOrdenado.csv";
+            player->setMedia(QUrl::fromLocalFile(path + "ternario.wav"));
+            player->play();
             break;
         case 2:
-            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/quaternario.csv";
+            myFileName = fileCSV + "quaternario.csv";
+            player->setMedia(QUrl::fromLocalFile(path + "quaternario.wav"));
+            player->play();
             break;
         default:
-            myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/binarioOrdenado.csv";
+            myFileName = fileCSV + "binarioOrdenado.csv";
+            player->setMedia(QUrl::fromLocalFile(path + "binario.wav"));
+            player->play();
             break;
     }
 
@@ -484,6 +542,9 @@ void MainWindow::on_salvarButton_clicked()
 {
 //    vision.release();
 //    vision.endRecording();
+    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+    player->setMedia(QUrl::fromLocalFile(path + "videoSalvo.wav"));
+    player->play();
     QMessageBox::warning(this,"Aviso","Video salvo!");
     ui->salvarButton->setEnabled(false);
 }

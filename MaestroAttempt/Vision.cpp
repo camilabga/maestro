@@ -75,20 +75,20 @@ Vision::Vision(){
     int argc = 4;
 
     CmdLineParser cml(argc, argv);
-    if (argc < 2 || cml["-h"]){
-            cerr << "Invalid number of arguments" << endl;
-            cerr << "Usage: (in.avi|live[:camera_index(e.g 0 or 1)]) [-c camera_params.yml] [-s  marker_size_in_meters] [-d "
-                    "dictionary:ALL_DICTS by default] [-h]"
-                 << endl;
-            cerr << "\tDictionaries: ";
-            for (auto dict : aruco::Dictionary::getDicTypes())
-                cerr << dict << " ";
-            cerr << endl;
-            cerr << "\t Instead of these, you can directly indicate the path to a file with your own generated "
-                    "dictionary"
-                 << endl;
-            //return false;
-    }
+//    if (argc < 2 || cml["-h"]){
+//            cerr << "Invalid number of arguments" << endl;
+//            cerr << "Usage: (in.avi|live[:camera_index(e.g 0 or 1)]) [-c camera_params.yml] [-s  marker_size_in_meters] [-d "
+//                    "dictionary:ALL_DICTS by default] [-h]"
+//                 << endl;
+//            cerr << "\tDictionaries: ";
+//            for (auto dict : aruco::Dictionary::getDicTypes())
+//                cerr << dict << " ";
+//            cerr << endl;
+//            cerr << "\t Instead of these, you can directly indicate the path to a file with your own generated "
+//                    "dictionary"
+//                 << endl;
+//            //return false;
+//    }
 
     string TheInputVideo = argv[1];
     if (cml["-c"])
@@ -194,9 +194,9 @@ void Vision::circleTracker(){
     GaussianBlur(TheInputImageCopy, frameBlur, Size(7,7), 0, 0);
     cvtColor(frameBlur, imageHSV, COLOR_BGR2HSV);
     // Green
-    //inRange(imageHSV, Scalar(85, 0, 250), Scalar(95, 255, 255), mask);
+    inRange(imageHSV, Scalar(75, 0, 254), Scalar(95, 255, 255), mask);
     // Pink
-    inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
+    //inRange(imageHSV, Scalar(140, 0, 230), Scalar(255, 160, 255), mask);
 
     Mat element = getStructuringElement(MORPH_ELLIPSE, Size(5, 5), Point(-1,-1));
     erode(mask, mask, element);

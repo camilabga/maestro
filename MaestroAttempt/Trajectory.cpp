@@ -236,16 +236,23 @@ char* Trajectory::getError(Point pos){
     new_send_y = (pwm[0]+pwm[1])*1;
     new_send_x = (pwm[2]+pwm[3])*-1;
 
-    cout << new_send_x << " " << new_send_y << endl;
+    string textX, textY;
+    textX = (new_send_x < 0 ? "Esquerda" : "Direita");
+    textY = (new_send_y < 0 ? "Cima" : "Baixo");
+    cout << textX << " " << textY << endl;
+    //cout << new_send_x << " " << new_send_y << endl;
+
     setlocale(LC_NUMERIC, "en_US.UTF-8");
     sprintf(temp0,"%f",new_send_x);
-    cout << temp0<<endl;
+
+    //cout << temp0<<endl;
+
     sprintf(to_send,"%s",temp0);
     strcat(to_send, ";");
     sprintf(temp1,"%.3f",new_send_y);
     strcat(to_send, temp1);
 
-    cout << to_send << endl;
+    //cout << to_send << endl;
 
     return to_send;
 }

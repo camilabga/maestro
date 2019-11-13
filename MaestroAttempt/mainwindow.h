@@ -5,6 +5,7 @@
 #include "Weareable.h"
 #include "Trajectory.h"
 #include "generator.h"
+#include "mousehover.h"
 
 #include <QMainWindow>
 #include <QMediaPlayer>
@@ -37,6 +38,7 @@ public:
     Vision vision;
     Weareable weareable;
     Trajectory trajectory;
+    Ui::MainWindow *ui;
 
 
 private slots:
@@ -103,7 +105,6 @@ private slots:
     void on_treinarBox_currentIndexChanged(int index);
 
 private:
-    Ui::MainWindow *ui;
 
     bool newGesture, correction;
 
@@ -128,6 +129,8 @@ private:
     QSoundEffect metronomoTick;
     QTimer *metronomoTimer;
     int metronomoValue;
+
+    QMediaPlayer *player;
 
     QString fileName;
 };

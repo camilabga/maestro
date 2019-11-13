@@ -24,9 +24,14 @@ public:
     CmdLineParser(int _argc, char **_argv) : argc(_argc), argv(_argv) {}
     bool operator[](string param) {
         int idx = -1;
-        for (int i = 0; i < argc && idx == -1; i++)
+        bool ret(false);
+
+        for (int i = 0; i < argc && idx == -1; i++){
+           // cerr << param << "  oi\n" ;
             if (string(argv[i]) == param) idx = i;
-        return (idx != -1);
+            ret = (idx != -1);
+        }
+        return (ret);
     }
     string operator()(string param, string defvalue = "-1") {
         int idx = -1;
@@ -38,6 +43,7 @@ public:
             return (argv[idx + 1]);
     }
 };
+
 struct TimerAvrg {
     std::vector<double> times;
     size_t curr = 0, n;
