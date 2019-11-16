@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     player = new QMediaPlayer(this);
     // Screen Reader
     ui->setupUi(this);
+/*
     MouseHover *mouseHover = new MouseHover(player, ui);
 
     //Buttons
@@ -61,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelIBM->installEventFilter(mouseHover);
     ui->labelPulsiera->installEventFilter(mouseHover);
     ui->actionSair->installEventFilter(mouseHover);
-
+*/
 
     Timer = new QTimer(this);
     connect(Timer, SIGNAL(timeout()), this, SLOT(DisplayImage()));
@@ -75,7 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     isLivreOn = false;
     gravarGesto = false;
     weareableIsOn = false;
-    espIP = (char*)"10.6.4.113";
+    //espIP = (char*)"10.50.0.68";
+    espIP = (char*)"10.6.4.105";
     myFileName = "/home/angelo/_Angelo/_Projetos/maestro/build-MaestroAttempt-Desktop_Qt_5_13_0_GCC_64bit-Debug/csv/binarioOrdenado.csv";
 
     // Language Settings, starting as portuguese.
@@ -135,10 +137,10 @@ MainWindow::MainWindow(QWidget *parent) :
     startEffect.play();
 
     // Sets inicial frame
-    Mat img = imread("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/pics/Webp.net-resizeimage.png", CV_LOAD_IMAGE_COLOR);
-    cv::cvtColor(img,img,CV_BGR2RGB);
-    QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
-    ui->image->setPixmap(QPixmap::fromImage(imdisplay));
+//    Mat img = imread("/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/pics/Webp.net-resizeimage.png", CV_LOAD_IMAGE_COLOR);
+//    cv::cvtColor(img,img,CV_BGR2RGB);
+//    QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
+//    ui->image->setPixmap(QPixmap::fromImage(imdisplay));
 
 }
 
@@ -339,18 +341,18 @@ void MainWindow::on_tapButton_clicked()
 
 void MainWindow::on_pulsieraButton_clicked()
 {
-    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+//    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
     if(weareableIsOn){
         weareable.setIP((char*)"0.0.0.000");
         QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
-        player->setMedia(QUrl::fromLocalFile(path + "pulseiraDesativada.wav"));
-        player->play();
+//        player->setMedia(QUrl::fromLocalFile(path + "pulseiraDesativada.wav"));
+//        player->play();
         QMessageBox::warning(this,"Aviso","Pulseira Desativada");
     } else {
         weareable.setIP(espIP);
-        QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
-        player->setMedia(QUrl::fromLocalFile(path + "pulseiraAtivada.wav"));
-        player->play();
+//        QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+//        player->setMedia(QUrl::fromLocalFile(path + "pulseiraAtivada.wav"));
+//        player->play();
         QMessageBox::warning(this,"Aviso","Pulseira Ativada");
         weareable.start();
     }
@@ -364,9 +366,9 @@ void MainWindow::on_pulsieraButton_clicked()
 
 bool MainWindow::salvarCSV()
 {
-    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
-    player->setMedia(QUrl::fromLocalFile(path + "arqCSV.wav"));
-    player->play();
+//    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+//    player->setMedia(QUrl::fromLocalFile(path + "arqCSV.wav"));
+//    player->play();
     QMessageBox::StandardButton ret = QMessageBox::information(this,
                                                                "Aviso",
                                                                "Informe o nome do arquivo CSV a ser salvo",
@@ -390,9 +392,9 @@ bool MainWindow::salvarCSV()
 
 bool MainWindow::salvarVideo()
 {
-    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
-    player->setMedia(QUrl::fromLocalFile(path + "arqAVI.wav"));
-    player->play();
+//    QString path = "/home/angelo/_Angelo/_Projetos/maestro/MaestroAttempt/audioFiles/";
+//    player->setMedia(QUrl::fromLocalFile(path + "arqAVI.wav"));
+//    player->play();
     QMessageBox::StandardButton ret = QMessageBox::information(this,
                                                                "Aviso",
                                                                "Informe o nome do arquivo '.avi' a ser salvo",
@@ -437,23 +439,23 @@ void MainWindow::on_treinarBox_currentIndexChanged(int index)
     switch (index) {
         case 0:
             myFileName = fileCSV + "binarioOrdenado.csv";
-            player->setMedia(QUrl::fromLocalFile(path + "binario.wav"));
-            player->play();
+//            player->setMedia(QUrl::fromLocalFile(path + "binario.wav"));
+//            player->play();
             break;
         case 1:
             myFileName = fileCSV + "ternarioOrdenado.csv";
-            player->setMedia(QUrl::fromLocalFile(path + "ternario.wav"));
-            player->play();
+//            player->setMedia(QUrl::fromLocalFile(path + "ternario.wav"));
+//            player->play();
             break;
         case 2:
             myFileName = fileCSV + "quaternario.csv";
-            player->setMedia(QUrl::fromLocalFile(path + "quaternario.wav"));
-            player->play();
+//            player->setMedia(QUrl::fromLocalFile(path + "quaternario.wav"));
+//            player->play();
             break;
         default:
             myFileName = fileCSV + "binarioOrdenado.csv";
-            player->setMedia(QUrl::fromLocalFile(path + "binario.wav"));
-            player->play();
+//            player->setMedia(QUrl::fromLocalFile(path + "binario.wav"));
+//            player->play();
             break;
     }
 
@@ -557,7 +559,31 @@ void MainWindow::on_salvarButton_clicked()
 void MainWindow::setPortuguese()
 {
     // Buttons
-    ui->startMetronomeButton->setText("Começar/Parar");
+    ui->startMetronomeButton->setText("Começar/Parar Metrônomo");
+    ui->playFeedbackButton->setText("Começar/Parar Retorno Auditivo");
+    ui->startBt->setText("Começar prática");
+    ui->stopBt->setText("Parar prática");
+    ui->pulsieraButton->setText("Começar/Parar retorno tátil");
+    ui->treinarButton->setText("Treinar Compasso:");
+    ui->praticaLivreButton->setText("Treino Livre");
+    ui->vizualizarButton->setText("Gerar Gráfico");
+    ui->imbButton->setText("Treinar IMB");
+    // Labels
+    ui->labelMetronome->setText("Metrônomo");
+    ui->labelAudioFeedback->setText("Retorno Auditivo");
+    ui->labelPulsiera->setText("Retorno Tátil");
+    ui->labelCompasso->setText("Seleção de Padrões de Marcação de Compasso");
+    ui->labelIBM->setText("Independência Motora dos Braços");
+    // Menu
+    ui->actionSair->setText("Sair");
+    // Combo Box
+    ui->treinarBox->setItemText(0, "Binário");
+    ui->treinarBox->setItemText(1, "Ternário");
+    ui->treinarBox->setItemText(2, "Quaternário");
+    ui->imbBox->setItemText(0, "Quadrado");
+    ui->imbBox->setItemText(1, "Círculo");
+
+/*    ui->startMetronomeButton->setText("Começar/Parar");
     ui->playFeedbackButton->setText("Começar/Parar");
     ui->startBt->setText("Começar");
     ui->stopBt->setText("Parar");
@@ -579,7 +605,7 @@ void MainWindow::setPortuguese()
     ui->treinarBox->setItemText(1, "Ternário");
     ui->treinarBox->setItemText(2, "Quaternário");
     ui->imbBox->setItemText(0, "Quadrado");
-    ui->imbBox->setItemText(1, "Círculo");
+    ui->imbBox->setItemText(1, "Círculo"); */
 }
 
 
